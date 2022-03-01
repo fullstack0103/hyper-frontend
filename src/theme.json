@@ -1,0 +1,29 @@
+{
+  "fonts": {
+    "primary": {
+      "name": "Rajdhani",
+      "weights": [300, 400, 500, 600]
+    },
+    "special": {
+      "name": "Lobster",
+      "weights": [400]
+    }
+  },
+  "colors": {
+    "primary": "#AAFF26",
+    "darkYellow": "#ff7e00",
+    "lightYellow": "#ffd200",
+    "backgroundPage": "#FFFFFF",
+    "black": "#000000",
+    "lightBlack": "#535353",
+    "gray": "#737373",
+    "white": "#FFFFFF",
+    "headingColor": "#000000",
+    "textColor": "#C4C4C4",
+    "mainCover": "#14161f"
+  },
+  "consts": {
+    "header_h": "64px",
+    "sidebar_w": "64px"
+  }
+}
