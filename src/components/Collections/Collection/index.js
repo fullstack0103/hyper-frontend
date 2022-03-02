@@ -33,30 +33,26 @@ export const Collection = (props) => {
         </div>
         <DetailInfoWrapper>
           <DetailInfo>
-            <VerifiedIcon />
-            <span>Verify</span>     
-          </DetailInfo>
-          <DetailInfo>
             <HeartOutlineIcon />
-            <span>{collection.favoriteCount} favorites</span>     
+            <span>{collection?.favoriteCount ?? 0} favorites</span>     
           </DetailInfo>
           <DetailInfo>
             <CommentIcon />
-            <span>{collection.commentCount} comments</span>     
+            <span>{collection?.commentCount ?? 0} comments</span>     
           </DetailInfo>
         </DetailInfoWrapper>
         <DetailInfoWrapper>
           <DetailInfo>
             <FourGridIcon />
-            <span>{collection.tradeCount} trades</span>     
+            <span>{collection?.tradeCount ?? 0} trades</span>     
           </DetailInfo>
           <DetailInfo>
             <NineGridIcon />
             {/* <span>Volume {collection.tradeVolume.toFixed(2)}$</span>      */}
-            <span>Volume {collection.tradeVolume.toFixed(2)}$</span>     
+            <span>Volume {(collection.tradeVolume ?? 0).toFixed(2)}$</span>     
           </DetailInfo>
         </DetailInfoWrapper>
-        <Description>{collection.description}</Description>
+        <Description>{collection?.description}</Description>
       </DetailWrapper>
     </CollectionContainer>
   )

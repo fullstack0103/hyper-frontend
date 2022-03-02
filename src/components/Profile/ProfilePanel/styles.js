@@ -38,7 +38,7 @@ export const ProfileBanner = styled.div`
 `;
 
 export const ProfileHeader = styled.div`
-  margin-top: 70px;
+  margin-top: 50px;
 
   .header-title{
     font-style: normal;
@@ -55,6 +55,7 @@ export const ProfileHeader = styled.div`
       display: flex;
       flex-direction: row;
       justify-content: center;
+      font-size: 32px;
     }
   }
 
@@ -137,3 +138,87 @@ export const ProfileFooter = styled.div`
     }
   }
 `;
+
+export const SocialList = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+
+  > a {
+    margin: 0px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover{
+      transform: scale(1.05);
+    }
+    svg {
+      font-size: 25px;
+    }
+    &.twitter {
+      svg {
+        path {
+          fill: #1d9bf0;
+        }
+      }
+    }
+    &.facebook {
+      padding: 2px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #45619d;
+      svg {
+        path {
+          fill: white;
+        }
+      }
+    }
+    &.site {
+      svg {
+        path {
+          fill: #b4b4b4;
+        }
+      }
+    }
+  }
+`
+
+export const CategoryTitle = styled.p`
+  text-align: center;
+  color: white;
+  font-size: 24px;
+  margin: 10px 0px;
+  font-weight: 500;
+`
+
+export const UserSocialList = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    svg {
+      font-size: 24px;
+      margin-right: 10px;
+      path {
+        fill: #1d9bf0;
+      }
+    }
+    span {
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s linear;
+      &:hover {
+        color: #AAFF26;
+      }
+    }
+  }
+`
