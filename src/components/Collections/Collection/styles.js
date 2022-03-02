@@ -76,6 +76,7 @@ export const DetailWrapper = styled.div`
   .link {
     text-align: center;
     > span {
+      cursor: pointer;
       font-weight: 600;
       font-size: 13px;
       line-height: 17px;
@@ -118,4 +119,8 @@ export const Description = styled.p`
   margin: 16px 0px;
   overflow-wrap: anywhere;
   text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 `

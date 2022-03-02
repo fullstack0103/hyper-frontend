@@ -4,10 +4,15 @@ import {
   ProfileBanner,
   ProfileHeader,
   ProfileContent,
-  ProfileFooter
+  ProfileFooter,
+  SocialList,
+  CategoryTitle,
+  UserSocialList
 } from './styles'
-import IconLabel from '../../Shared/IconLabel';
-import { HeartOutlineIcon, VerifiedIcon, ItemsIcon, UserListIcon, CommentIcon } from '../../Shared/SvgIcons';
+import IconLabel from '../../Shared/IconLabel'
+import AiOutlineGlobal from '@meronex/icons/ai/AiOutlineGlobal'
+import FaFacebookF from '@meronex/icons/fa/FaFacebookF'
+import { HeartOutlineIcon, TwitterIcon, ItemsIcon, UserListIcon, CommentIcon } from '../../Shared/SvgIcons';
 import { UserRole } from '../../../contexts/AuthContext';
 
 export const ProfilePanel = (props) => {
@@ -22,22 +27,25 @@ export const ProfilePanel = (props) => {
       <ProfileHeader>
         <div className="header-title">
           <div>
-            {ownerInfo.role === UserRole.User ? (
-              <></>
-            ) : (
-              <IconLabel
-                icon={<VerifiedIcon />}
-                label={''}
-              />
-            )}
-            {ownerInfo.name}
+            {ownerInfo.name && `${ownerInfo.name} / `}{ownerInfo.email}
           </div>
         </div>
         {ownerInfo.role !== UserRole.User && (
-          <div className="header-link">
-            https://www.{ownerInfo.name}.com
-          </div>
+          <SocialList>
+            <a href='https://twitter.com/' rel="noreferrer" target='_blank' className='twitter'><TwitterIcon /></a>
+            <a href='https://facebook.com/' rel="noreferrer" target='_blank' className='facebook'><FaFacebookF /></a>
+            <a href='https://linkedin.com/' rel="noreferrer" target='_blank' className='site'><AiOutlineGlobal /></a>
+          </SocialList>
         )}
+        {ownerInfo.role === UserRole.User && (
+          <UserSocialList>
+            <a href='https://twitter.com/' rel="noreferrer" target='_blank'>
+              <TwitterIcon />
+              <span>@USERTWITTERHEADLINE</span>
+              </a>
+          </UserSocialList>
+        )}
+        {ownerInfo.role === UserRole.Creator && ownerInfo?.businessName && <CategoryTitle>{ownerInfo?.businessName}</CategoryTitle>}
         <ProfileContent>
           {ownerInfo.role === UserRole.Creator ? ownerInfo.bio : ''}
         </ProfileContent>
