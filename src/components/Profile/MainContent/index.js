@@ -1,19 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from 'react'
+import { useNavigate } from "react-router-dom"
 import CardItem from '../../Shared/CardItem'
-import CardPagination from '../../Shared/CardPagination';
-import { ProfilePanel } from '../ProfilePanel';
-import { useWindowSize } from '../../../hooks/useWindowSize';
-import { ProfilePageSections } from '../index';
-import ActivitySection from '../../Shared/ActivitySection';
-import OfferSection from '../../Shared/OfferSection';
-import { EmptyFolderIcon } from '../../Shared/SvgIcons';
-import GradientButton from '../../Shared/GradientButton';
-import HideNFTSection from '../../Shared/HideNFTSection';
-import FavoriteSection from '../../Shared/FavoriteSection';
-import { useCustomWallet } from '../../../contexts/WalletContext';
-import { useGlobal } from '../../../contexts/GlobalContext';
-import { useAuth, UserRole } from '../../../contexts/AuthContext';
+import { ProfilePanel } from '../ProfilePanel'
+import { ProfilePageSections } from '../index'
+import ActivitySection from '../../Shared/ActivitySection'
+import OfferSection from '../../Shared/OfferSection'
+import { EmptyFolderIcon } from '../../Shared/SvgIcons'
+import GradientButton from '../../Shared/GradientButton'
+import HideNFTSection from '../../Shared/HideNFTSection'
+import FavoriteSection from '../../Shared/FavoriteSection'
+import { useCustomWallet } from '../../../contexts/WalletContext'
+import { useGlobal } from '../../../contexts/GlobalContext'
+import { useAuth, UserRole } from '../../../contexts/AuthContext'
 import { Select } from '../../Shared/Select'
 import {
   MainContentContainer,
@@ -26,22 +24,21 @@ import {
 export const MainContent = (props) => {
   const {
     address,
-    isOpenRightMenu,
+    // isOpenRightMenu,
     isMoreView,
     activeSection
   } = props
 
-  let navigate = useNavigate();
-  const gridDivRef = useRef();
-  const { wallet } = useCustomWallet();
-  const { auth } = useAuth();
+  let navigate = useNavigate()
+  const gridDivRef = useRef()
+  const { wallet } = useCustomWallet()
+  const { auth } = useAuth()
+  const { invokeServer } = useGlobal()
 
-  const { invokeServer } = useGlobal();
+  const [ownedNFTs, setOwnedNFTs] = useState([])
+  const [nftFound, setNFTFound] = useState([])
 
-  const [ownedNFTs, setOwnedNFTs] = useState([]);
-  const [nftFound, setNFTFound] = useState([]);
-
-  const [isOperator, setIsOperator] = useState(false);
+  const [isOperator, setIsOperator] = useState(false)
   const [ownerInfo, setOwnerInfo] = useState({
     items: 0,
     holders: 0,
