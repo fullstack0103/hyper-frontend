@@ -6,7 +6,7 @@ import { useCustomWallet } from '../../../contexts/WalletContext';
 import { useParams } from 'react-router-dom';
 
 const ProfileStatsChart = (props) => {
-  const { period, setHistory } = props;
+  const { period, setHistory, filterValue } = props;
   const { address } = useParams();
 
   const { invokeServer } = useGlobal();

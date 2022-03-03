@@ -37,6 +37,7 @@ const PopUpUserProfileItem = (props) => {
       <LinkItem onClick={() => navigate('/profile/me')}>Profile</LinkItem>
       {/* <LinkItem>Favorites</LinkItem> */}
       {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/my-collections')}>My Collections</LinkItem>}
+      {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/upload')}>UPLOAD NFT</LinkItem>}
       <LinkItem onClick={() => navigate('/settings')}>Settings</LinkItem>
       <LinkItem onClick={handleLogOut}>Log Out</LinkItem>
     </PopUpUserProfileItemContainer>

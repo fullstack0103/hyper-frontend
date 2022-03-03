@@ -26,7 +26,7 @@ export const MainContent = (props) => {
   const itemsRef = useRef(null)
   const [loadedSales, setLoadedSales] = useState([])
   const [isLoadMore, setIsLoadMore] = useState(false)
-  const [selectedFilterItem, setSelectedFilterItem] = useState('')
+  const [selectedFilterItem, setSelectedFilterItem] = useState('all')
 
   const filterList = [
     { key: 'all', name: 'All' },

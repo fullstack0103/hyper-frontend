@@ -26,13 +26,21 @@ export const ActivitySectionHeader = styled.div`
 `;
 
 export const ActivitySectionFilter = styled.div`
-    width: 130px;
-    margin-top: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  > div:first-child {
+    min-width: 130px;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
-export const ActivitySectionBody = styled.div`
-    
-`;
+export const ActivitySectionBody = styled.div``;
 
 export const ActivityTable = styled.div`
   margin-top: 10px;
@@ -123,3 +131,13 @@ export const EventUserProfile = styled.div`
     }
 `;
 
+export const FilterWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  > div {
+    width: auto;
+    margin-left: 15px;
+  }
+`
