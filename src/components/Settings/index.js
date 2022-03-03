@@ -44,7 +44,11 @@ export const Settings = (props) => {
           closeSideMenu={() => setIsOpenSideMenu(false)}
         />
       )}
-      <MainContent isOpenRightMenu={isOpenSideMenu} activeSection={activeSection} />
+      <MainContent
+        isOpenRightMenu={isOpenSideMenu}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+      />
     </SettingsContainer>
   )
 }

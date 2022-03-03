@@ -28,6 +28,8 @@ export const SideBar = (props) => {
 
   const { auth } = useAuth();
 
+  console.log(auth)
+
   return (
     <SideBarContainer>
       <SideToggleBar>
@@ -49,7 +51,9 @@ export const SideBar = (props) => {
               <UserCircleFillSharpIcon />
             </HyperTooltip>
             {isOpenSideMenu && (
-              <SideBarLabel>Profile</SideBarLabel>
+              <SideBarLabel>
+                {auth?.loggedUserRole === 'creator' ? 'Creator profile' : 'Profile'}
+              </SideBarLabel>
             )}
           </div>
           {
