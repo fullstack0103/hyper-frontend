@@ -28,11 +28,13 @@ import useToast from '../../../hooks/useToast';
 import { useCustomWallet } from '../../../contexts/WalletContext';
 import GradientButton from '../../Shared/GradientButton';
 import { Input, TextArea } from '../../Shared/InputBox';
+import { Alert } from '../../Shared/Confirm';
 
 export const MainContent = (props) => {
 
   const {
-    activeSection
+    activeSection,
+    setActiveSection
   } = props
 
   const { auth, setAuth, creatorSignupInfo, setCreatorSignupInfo, handleSubmitCreatorInfo, updateSessionProfile } = useAuth();
@@ -42,6 +44,11 @@ export const MainContent = (props) => {
 
   const [name, setName] = useState('');
   const [accountBio, setAccountBio] = useState('');
+  const [userFormState, setUserFormState] = useState({
+    name: auth?.loggedUserName || '',
+    email: auth.loggedEmailName || ''
+  })
+  const [alertState, setAlertState] = useState({ open: false, content: null })
 
   const [coverImage, setCoverImage] = useState(settingCover);
   const [coverFile, setCoverFile] = useState(null);
@@ -265,6 +272,24 @@ export const MainContent = (props) => {
     }
   }
 
+  const handleChangeUserFormState = (e) => {
+    setUserFormState({
+      ...userFormState,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const onSubmitCreatorInfo = () => {
+    if (!userFormState.name || !userFormState.email) {
+      setAlertState({
+        open: true,
+        content: 'Please complete your profile first'
+      })
+      return
+    }
+    handleSubmitCreatorInfo()
+  }
+
   useEffect(() => {
     if (auth.isLoggedIn === true) {
       auth.avatarURI && auth.avatarURI !== '' && setProfileImage(auth.avatarURI);
@@ -295,6 +320,10 @@ export const MainContent = (props) => {
   }, [auth.notification])
 
   useEffect(() => {
+    setUserFormState({
+      name: auth?.loggedUserName || '',
+      email: auth.loggedEmailName || ''
+    })
     setCreatorSignupInfo( t => {
       return {
         ...t,
@@ -305,272 +334,308 @@ export const MainContent = (props) => {
     });
   }, [auth.loggedUserName, auth.loggedEmailName, auth.loggedPassword])
 
-  return (
-    <MainContentContainer>
-      <SettingFormContainer>
-        {activeSection === SettingPageSections.profile ? (
-          <>
-            <SettingBanner>
-              <div className="cover-image">
-                <img src={coverImage} alt='profile_cover' />
-                <div className="overlay">
-                  <FileUploader
-                    label={'change'}
-                    icon={<ChangeIcon />}
-                    isOnlyIcon={true}
-                    handleFile={changeCoverImage}
-                  />
-                  <div className="overlay-text">Change</div>
-                </div>
-              </div>
-              <div className="logo-image">
-                <img src={profileImage} alt='' />
-                <div className="overlay">
-                  <FileUploader
-                    label={'change'}
-                    icon={<ChangeIcon />}
-                    isOnlyIcon={true}
-                    handleFile={changeProfileImage}
-                  />
-                  <div className="overlay-text">Change</div>
-                </div>
-              </div>
-            </SettingBanner>
-            <SettingForm>
-              <FormGroup>
-                <label>Name *</label>
-                <Input
-                  placeholder='You can enter you full name, business name, or brand name'
-                  name='name'
-                  type='text'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  autoComplete='off'
-                />
-              </FormGroup>
-              <FormGroup>
-                <label>Username *</label>
-                <Input
-                  placeholder='Choose a username for your profile'
-                  name='username'
-                  type='text'
-                  defaultValue={auth.loggedUserName}
-                  required
-                />
-              </FormGroup>
-              {auth?.loggedUserRole === 'creator' && (
-                <>
-                  <FormGroup>
-                    <label>Website</label>
-                    <Input
-                      placeholder='Website url'
-                      name='website'
-                      type='text'
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <label>Facebook</label>
-                    <Input
-                      placeholder='Facebook url'
-                      name='facebook'
-                      type='text'
-                    />
-                  </FormGroup>
-                </>
-              )}
-              <FormGroup>
-                <label>Twitter</label>
-                <Input
-                  placeholder='Twitter url'
-                  name='twitter'
-                  type='text'
-                />
-              </FormGroup>
 
-              <FormGroup>
-                <label>Account Bio</label>
-                <TextArea
-                  name='account_bio'
-                  rows={4}
-                  value={accountBio}
-                  onChange={(e) => setAccountBio(e.target.value)}
+  useEffect(() => {
+    if (activeSection !== SettingPageSections.verification) return
+    if (!userFormState.email) {
+      setAlertState({
+        open: true,
+        content: 'Please fill your email first'
+      })
+    }
+  }, [activeSection])
+
+
+  return (
+    <>
+      <MainContentContainer>
+        <SettingFormContainer>
+          {activeSection === SettingPageSections.profile ? (
+            <>
+              <SettingBanner>
+                <div className="cover-image">
+                  <img src={coverImage} alt='profile_cover' />
+                  <div className="overlay">
+                    <FileUploader
+                      label={'change'}
+                      icon={<ChangeIcon />}
+                      isOnlyIcon={true}
+                      handleFile={changeCoverImage}
+                    />
+                    <div className="overlay-text">Change</div>
+                  </div>
+                </div>
+                <div className="logo-image">
+                  <img src={profileImage} alt='' />
+                  <div className="overlay">
+                    <FileUploader
+                      label={'change'}
+                      icon={<ChangeIcon />}
+                      isOnlyIcon={true}
+                      handleFile={changeProfileImage}
+                    />
+                    <div className="overlay-text">Change</div>
+                  </div>
+                </div>
+              </SettingBanner>
+              <SettingForm>
+                <FormGroup>
+                  <label>Name *</label>
+                  <Input
+                    placeholder='You can enter you full name, business name, or brand name'
+                    name='name'
+                    type='text'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    autoComplete='off'
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <label>Username *</label>
+                  <Input
+                    placeholder='Choose a username for your profile'
+                    name='name'
+                    type='text'
+                    value={userFormState.name}
+                    onChange={e => handleChangeUserFormState(e)}
+                    required
+                  />
+                </FormGroup>
+                {auth?.loggedUserRole === 'creator' && (
+                  <>
+                    <FormGroup>
+                      <label>Website</label>
+                      <Input
+                        placeholder='Website url'
+                        name='website'
+                        type='text'
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <label>Facebook</label>
+                      <Input
+                        placeholder='Facebook url'
+                        name='facebook'
+                        type='text'
+                      />
+                    </FormGroup>
+                  </>
+                )}
+                <FormGroup>
+                  <label>Twitter</label>
+                  <Input
+                    placeholder='Twitter url'
+                    name='twitter'
+                    type='text'
+                  />
+                </FormGroup>
+
+                <FormGroup>
+                  <label>Account Bio</label>
+                  <TextArea
+                    name='account_bio'
+                    rows={4}
+                    value={accountBio}
+                    onChange={(e) => setAccountBio(e.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <label>Wallet Address</label>
+                  <Input
+                    name='wallet-address'
+                    defaultValue={wallet.address}
+                  />
+                  <p>
+                    Our account ownership is controlled by your wallet. The above wallet address currently controls access to you account
+                  </p>
+                </FormGroup>
+                <FormGroup>
+                  <label>Email Address *</label>
+                  <Input
+                    name='email'
+                    placeholder='This is where push notifications and account updates will be sent.'
+                    required={true}
+                    value={userFormState?.email}
+                    onChange={(e) => handleChangeUserFormState(e)}
+                  />
+                </FormGroup>
+                <GradientButton
+                  label={'Update profile information'}
+                  height={'42px'}
+                  width={'300px'}
+                  fontSize={'18px'}
+                  isNoPadding
+                  handleClick={updateProfileInformation}
                 />
-              </FormGroup>
-              <FormGroup>
-                <label>Wallet Address</label>
-                <Input
-                  name='wallet-address'
-                  defaultValue={wallet.address}
+              </SettingForm>`
+            </>
+          ) : activeSection === SettingPageSections.verification ? (
+            <VerificationSection>
+              <MenuWrapper>
+                {creatorList.map(item => (
+                  <Tab
+                    key={item.key}
+                    active={selectedItem === item.key}
+                    onClick={() => setSelectedItem(item.key)}
+                  >{item.title}</Tab>
+                ))}
+              </MenuWrapper>
+              {selectedItem === 'creator' && (
+                <Creator
+                  handleGo={() => setSelectedItem('project_info')}
                 />
-                <p>
-                  Our account ownership is controlled by your wallet. The above wallet address currently controls access to you account
-                </p>
-              </FormGroup>
-              <FormGroup>
-                <label>Email Address</label>
-                <Input
-                  name='email'
-                  placeholder='This is where push notifications and account updates will be sent.'
-                  required={true}
-                  defaultValue={auth.loggedEmailName}
-                />
-              </FormGroup>
+              )}
+              {selectedItem === 'project_info' && (
+                <ProjectInfoWrapper>
+                  <ProjectInfo
+                    creatorInfo={creatorSignupInfo}
+                    setCreatorInfo={setCreatorSignupInfo}
+                    handleBack={() => setSelectedItem('creator')}
+                    handleNext={() => setSelectedItem('project_tags')}
+                  />
+                </ProjectInfoWrapper>
+              )}
+              {selectedItem === 'project_tags' && (
+                <ProjectInfoWrapper>
+                  <ProjectTags
+                    creatorInfo={creatorSignupInfo}
+                    setCreatorInfo={setCreatorSignupInfo}
+                    handleSubmit={onSubmitCreatorInfo}
+                    handleBack={() => setSelectedItem('project_info')}
+                  />
+                </ProjectInfoWrapper>
+              )}
+            </VerificationSection>
+          ) : activeSection === SettingPageSections.notification ? (
+            <NotificationSection>
+              <div className="title">Notifications</div>
+              <div className="description">Edit your notification preferences</div>
+              <div className="content">
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'New Item Sold'}
+                    description={'When someone purchased one of your items'}
+                    isChecked={notificationSettings.New_Item_Sold}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      New_Item_Sold: !prev.New_Item_Sold
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'New Bid Activity'}
+                    description={'When someone bids on one of your items'}
+                    isChecked={notificationSettings.New_Bid_Activity}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      New_Bid_Activity: !prev.New_Bid_Activity
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'Auction Expiration'}
+                    description={'When an auction you created ends'}
+                    isChecked={notificationSettings.Auction_Expiration}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      Auction_Expiration: !prev.Auction_Expiration
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'Owned Asset Upadates'}
+                    description={'When a siginificant update occurs for one of the item you have buyed'}
+                    isChecked={notificationSettings.Owned_Asset_Upadates}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      Owned_Asset_Upadates: !prev.Owned_Asset_Upadates
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'Like on Post'}
+                    description={'When someone like on one of your items'}
+                    isChecked={notificationSettings.Like_On_Post}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      Like_On_Post: !prev.Like_On_Post
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'Comment Post'}
+                    description={'When someone comment on one of your items'}
+                    isChecked={notificationSettings.Comment_Post}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      Comment_Post: !prev.Comment_Post
+                    })
+                    )}
+                  />
+                </div>
+                <div className="content-item">
+                  <ToggleGroupItem
+                    title={'HyperchainX Newsletter'}
+                    description={'Occasional updates from the HyperchainX team'}
+                    isChecked={notificationSettings.HyperchainX_Newsletter}
+                    toggleChecked={() => setNotificationSettings(prev =>
+                    ({
+                      ...prev,
+                      HyperchainX_Newsletter: !prev.HyperchainX_Newsletter
+                    })
+                    )}
+                  />
+                </div>
+              </div>
               <GradientButton
-                label={'Update profile information'}
+                label={'Update notification information'}
                 height={'42px'}
-                width={'300px'}
+                width={'320px'}
                 fontSize={'18px'}
                 isNoPadding
-                handleClick={updateProfileInformation}
+                handleClick={updateNotificationInformation}
               />
-            </SettingForm>`
-          </>
-        ) : activeSection === SettingPageSections.verification ? (
-          <VerificationSection>
-            <MenuWrapper>
-              {creatorList.map(item => (
-                <Tab
-                  key={item.key}
-                  active={selectedItem === item.key}
-                  onClick={() => setSelectedItem(item.key)}
-                >{item.title}</Tab>
-              ))}
-            </MenuWrapper>
-            {selectedItem === 'creator' && (
-              <Creator
-                handleGo={() => setSelectedItem('project_info')}
-              />
-            )}
-            {selectedItem === 'project_info' && (
-              <ProjectInfoWrapper>
-                <ProjectInfo
-                  creatorInfo={creatorSignupInfo}
-                  setCreatorInfo={setCreatorSignupInfo}
-                  handleBack={() => setSelectedItem('creator')}
-                  handleNext={() => setSelectedItem('project_tags')}
-                />
-              </ProjectInfoWrapper>
-            )}
-            {selectedItem === 'project_tags' && (
-              <ProjectInfoWrapper>
-                <ProjectTags
-                  creatorInfo={creatorSignupInfo}
-                  setCreatorInfo={setCreatorSignupInfo}
-                  handleSubmit={handleSubmitCreatorInfo}
-                  handleBack={() => setSelectedItem('project_info')}
-                />
-              </ProjectInfoWrapper>
-            )}
-          </VerificationSection>
-        ) : activeSection === SettingPageSections.notification ? (
-          <NotificationSection>
-            <div className="title">Notifications</div>
-            <div className="description">Edit your notification preferences</div>
-            <div className="content">
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'New Item Sold'}
-                  description={'When someone purchased one of your items'}
-                  isChecked={notificationSettings.New_Item_Sold}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    New_Item_Sold: !prev.New_Item_Sold
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'New Bid Activity'}
-                  description={'When someone bids on one of your items'}
-                  isChecked={notificationSettings.New_Bid_Activity}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    New_Bid_Activity: !prev.New_Bid_Activity
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'Auction Expiration'}
-                  description={'When an auction you created ends'}
-                  isChecked={notificationSettings.Auction_Expiration}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    Auction_Expiration: !prev.Auction_Expiration
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'Owned Asset Upadates'}
-                  description={'When a siginificant update occurs for one of the item you have buyed'}
-                  isChecked={notificationSettings.Owned_Asset_Upadates}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    Owned_Asset_Upadates: !prev.Owned_Asset_Upadates
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'Like on Post'}
-                  description={'When someone like on one of your items'}
-                  isChecked={notificationSettings.Like_On_Post}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    Like_On_Post: !prev.Like_On_Post
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'Comment Post'}
-                  description={'When someone comment on one of your items'}
-                  isChecked={notificationSettings.Comment_Post}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    Comment_Post: !prev.Comment_Post
-                  })
-                  )}
-                />
-              </div>
-              <div className="content-item">
-                <ToggleGroupItem
-                  title={'HyperchainX Newsletter'}
-                  description={'Occasional updates from the HyperchainX team'}
-                  isChecked={notificationSettings.HyperchainX_Newsletter}
-                  toggleChecked={() => setNotificationSettings(prev =>
-                  ({
-                    ...prev,
-                    HyperchainX_Newsletter: !prev.HyperchainX_Newsletter
-                  })
-                  )}
-                />
-              </div>
-            </div>
-            <GradientButton
-              label={'Update notification information'}
-              height={'42px'}
-              width={'320px'}
-              fontSize={'18px'}
-              isNoPadding
-              handleClick={updateNotificationInformation}
-            />
-          </NotificationSection>
-        ) : (<></>)}
-      </SettingFormContainer>
-    </MainContentContainer>
+            </NotificationSection>
+          ) : (<></>)}
+        </SettingFormContainer>
+      </MainContentContainer>
+      <Alert
+        width='600px'
+        icon={
+          <svg fill="none" viewBox="0 0 24 24" style={{ width: '2rem', height: '2rem' }} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        }
+        title={'Error'}
+        content={alertState.content}
+        acceptText='Complete profile now'
+        open={alertState.open}
+        onClose={() => {
+          setActiveSection('profile')
+          setAlertState({ open: false, content: null })
+        }}
+        onAccept={() => {
+          setActiveSection('profile')
+          setAlertState({ open: false, content: null })
+        }}
+      />
+    </>
   )
 }
