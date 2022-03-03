@@ -180,6 +180,22 @@ export const DetailsContainer = styled.div`
             flex-wrap: wrap;
             margin-top: 5px;
           }
+
+          .nft-price {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+
+            > div {
+              display: flex;
+              align-items: center;
+              margin: 0 15px;
+
+              span {
+                margin-left: 5px;
+              }
+            }
+          }
           
           @media (min-width: 576px) {
             padding: 24px 35px;

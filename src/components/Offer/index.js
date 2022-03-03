@@ -44,6 +44,7 @@ export const Offer = (props) => {
 
   const { collection, tokenId } = useParams();
 
+  const theme = useTheme();
   const { auth } = useAuth();
   const { wallet } = useCustomWallet();
   const navigate = useNavigate();
@@ -219,7 +220,7 @@ export const Offer = (props) => {
                 <div className="nft-review">
                   <IconLabelWrapper>
                     <ItemsIcon />
-                    <span>{itemLoaded?.totalSupply} item{itemLoaded?.totalSupply <= 1 ? '' : 's'}</span>
+                    <span>{itemLoaded?.totalSupply} {itemLoaded?.totalSupply <= 1 ? 'copy' : 'copies'}</span>
                   </IconLabelWrapper>
                   <IconLabelWrapper className="owned-by" onClick={() => setIsOwnedModal(true)}>
                     <UserListIcon />
@@ -242,10 +243,21 @@ export const Offer = (props) => {
                     <span>{favorite?.count} favorite{favorite?.count <= 1 ? '' : 's'}</span>
                   </IconLabelWrapper>
                 </div>
+                <div className="nft-price">
+                  <span>PRICE</span>
+                  <div>
+                    <img src={theme.images.chainTokenIcon} alt='' />
+                    <span>0.003</span>
+                    <span>HyperX</span>
+                  </div>
+                  <span>
+                    $0.00
+                  </span>
+                </div>
               </div>
               <div className="user-detail">
                 <div onClick={() => navigate(`/profile/${creatorInfo?.address}`)}>
-                  <div className="username-label">{creatorInfo?.name}</div>
+                  <div className="username-label">Owner by {creatorInfo?.name}</div>
                   <div className="username-value">{creatorInfo?.address?.slice(0, 6) + '...' + creatorInfo?.address?.slice(-4)}</div>
                 </div>
                 <div onClick={() => navigate(`/profile/${creatorInfo?.address}`)}>
