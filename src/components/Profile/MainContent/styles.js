@@ -90,3 +90,30 @@ export const CardList = styled.div`
   gap: 20px;
   justify-content: space-evenly;
 `;
+
+export const FilterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+
+  #select-input {
+    color: #191B24;
+    background: #AAFF26;
+    #list {
+      > div {
+        font-size: 14px;
+        padding: 5px 15px;
+      }
+    }
+    > div:first-child {
+      padding: 10px 15px;
+      font-size: 18px;
+      font-weight: bold;
+      min-width: 100px;
+    }
+  }
+`
+
+export const Option = styled.div`
+
+`

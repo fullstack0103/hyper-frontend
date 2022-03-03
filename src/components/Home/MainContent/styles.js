@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const MainContentContainer = styled.div`
   position: relative;
@@ -25,3 +25,14 @@ export const CardList = styled.div`
   gap: 20px;
   justify-content: space-evenly;
 `;
+
+export const FilterWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  > div {
+    width: auto;
+    margin-left: 15px;
+  }
+`

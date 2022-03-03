@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   StatsEventTableContainer,
   StatsEventTableSectionBody,
@@ -6,20 +7,20 @@ import {
   EventCreatorProfile,
   EventTimeFieldDiv,
   EventUserProfile
-} from './styles';
-import { useTheme } from 'styled-components';
-import { EmptyActivityIcon, ExternalLinkIcon } from '../SvgIcons';
-import eventCreatorAvatar from '../../../assets/images/EventCreatorAvatar.png';
+} from './styles'
+import { useTheme } from 'styled-components'
+import { EmptyActivityIcon } from '../SvgIcons'
+import eventCreatorAvatar from '../../../assets/images/EventCreatorAvatar.png'
 
 const StatsEventTable = (props) => {
-
   const { eventList, nftFiltered, users } = props
 
-  const theme = useTheme();
-  const [eventRows, setEventRows] = useState([]);
+  const theme = useTheme()
+  const navigate = useNavigate()
+
+  const [eventRows, setEventRows] = useState([])
 
   useEffect(() => {
-
     if (eventList?.length > 0) {
       let rows = eventList.map((event, idx) => (
         <tr key={idx}>
@@ -32,7 +33,6 @@ const StatsEventTable = (props) => {
           <td>{renderTimeField(event)}</td>
         </tr>
       ))
-
       setEventRows(tt => rows);
     } else {
       setEventRows(t => []);
@@ -41,10 +41,13 @@ const StatsEventTable = (props) => {
 
   const renderItemField = (event) => {
     let tt = nftFiltered.find(nft => nft.collectionAddress.toLowerCase() === event.collectionAddress.toLowerCase() && nft.tokenId === event.tokenId)
-
     let nftAvatar = tt?.image || eventCreatorAvatar;
     return (
-      <EventCreatorProfile>
+      <EventCreatorProfile
+        isEnable={tt}
+        onClick={() => console.log('Item click')}
+        // Change click event
+      >
         <img src={nftAvatar} alt='nft' />
         <div>
           <div className="title">{tt?.creatorName}</div>
@@ -59,7 +62,10 @@ const StatsEventTable = (props) => {
 
     let userAvatar = user?.avatarURI || eventCreatorAvatar;
     return (
-      <EventUserProfile>
+      <EventUserProfile
+        isEnable={user}
+        onClick={() => user && navigate(`/profile/${address.toLowerCase()}`)}
+      >
         <img src={userAvatar} alt='nft' />
         <div>
           <div className="value">{user?.name || '---'}</div>
@@ -78,7 +84,6 @@ const StatsEventTable = (props) => {
     return (
       <EventTimeFieldDiv>
         <div className="value">{exp_date}</div>
-        {/* <ExternalLinkIcon /> */}
       </EventTimeFieldDiv>
     )
   }
@@ -146,4 +151,4 @@ const StatsEventTable = (props) => {
   )
 }
 
-export default StatsEventTable;
+export default StatsEventTable

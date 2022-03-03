@@ -1,9 +1,13 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
-import { MainContentContainer, CardList } from './styles'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
+import { useNavigate } from "react-router-dom"
 import CardItem from '../../Shared/CardItem'
-import { useWindowSize } from '../../../hooks/useWindowSize';
-import { useGlobal } from '../../../contexts/GlobalContext';
+import { useWindowSize } from '../../../hooks/useWindowSize'
+import GradientButton from '../../Shared/GradientButton'
+import {
+  MainContentContainer,
+  CardList,
+  FilterWrapper
+} from './styles'
 
 const PIXELS_TO_SCROLL = 100
 
@@ -22,6 +26,13 @@ export const MainContent = (props) => {
   const itemsRef = useRef(null)
   const [loadedSales, setLoadedSales] = useState([])
   const [isLoadMore, setIsLoadMore] = useState(false)
+  const [selectedFilterItem, setSelectedFilterItem] = useState('')
+
+  const filterList = [
+    { key: 'all', name: 'All' },
+    { key: 'listed', name: 'Listed' },
+    { key: 'unlisted', name: 'Unlisted' },
+  ]
 
   const handleDetails = (sale) => {
     if (sale.method === 2) {
@@ -88,6 +99,20 @@ export const MainContent = (props) => {
     >
       {sales.length > 0 ? (
         <>
+        <FilterWrapper>
+          {filterList.map(item => (
+            <GradientButton
+              key={item.key}
+              isNoPadding
+              width='100px'
+              height='40px'
+              label={item.name}
+              isBlackMode={selectedFilterItem !== item.key}
+              isDarkMode={selectedFilterItem !== item.key}
+              handleClick={() => setSelectedFilterItem(item.key)}
+            />
+          ))}
+        </FilterWrapper>
           <CardList
             isMoreView={isMoreView}
           >

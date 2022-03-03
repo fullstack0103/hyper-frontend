@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { VerifiedIcon, HeartOutlineIcon, CommentIcon, FourGridIcon, NineGridIcon } from '../../Shared/SvgIcons'
+import { HeartOutlineIcon, CommentIcon, FourGridIcon, NineGridIcon } from '../../Shared/SvgIcons'
 import {
   CollectionContainer,
   HeaderImage,

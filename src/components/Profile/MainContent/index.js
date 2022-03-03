@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MainContentContainer, CardContainer, CardList } from './styles'
 import CardItem from '../../Shared/CardItem'
 import CardPagination from '../../Shared/CardPagination';
 import { ProfilePanel } from '../ProfilePanel';
@@ -15,9 +14,16 @@ import FavoriteSection from '../../Shared/FavoriteSection';
 import { useCustomWallet } from '../../../contexts/WalletContext';
 import { useGlobal } from '../../../contexts/GlobalContext';
 import { useAuth, UserRole } from '../../../contexts/AuthContext';
+import { Select } from '../../Shared/Select'
+import {
+  MainContentContainer,
+  CardContainer,
+  CardList,
+  FilterWrapper,
+  Option
+} from './styles'
 
 export const MainContent = (props) => {
-
   const {
     address,
     isOpenRightMenu,
@@ -42,6 +48,14 @@ export const MainContent = (props) => {
     floorPrice: 0.0,
     volumeTrade: 0.0,
   })
+  const [selectedFilterOption, setSelectedFilterOption] = useState('all')
+
+  const tokenOptions = [
+    { id: 0, value: 'all', content: <Option><span>ALL</span></Option> },
+    { id: 1, value: 'direct_sale', content: <Option><span>DIRECT SALE</span></Option> },
+    { id: 2, value: 'auction', content: <Option><span>AUCTION</span></Option> },
+    { id: 2, value: 'unlisted', content: <Option><span>UNLISTED</span></Option> },
+  ]
 
   const handleDetails = (collectionAddress, tokenId) => {
     if (address.toLowerCase() === wallet.address.toLowerCase())
@@ -170,6 +184,15 @@ export const MainContent = (props) => {
           <>
             {nftFound.length > 0 ? (
               <>
+                <FilterWrapper>
+                  <Select
+                    notReload
+                    placeholder='Select a option'
+                    options={tokenOptions}
+                    defaultValue={selectedFilterOption}
+                    onChange={val => console.log(val)}
+                  />
+                </FilterWrapper>
                 <CardList isMoreView={isMoreView} ref={gridDivRef}>
                   {nftFound.map((item, index) => (
                     <CardItem key={index} item={item} onClick={() => handleDetails(item.collectionAddress, item.tokenId)} profileAddress={address} />
