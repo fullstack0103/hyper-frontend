@@ -1,4 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useTheme } from 'styled-components'
+import { useGlobal } from '../../../contexts/GlobalContext'
+import BsGraphUp from '@meronex/icons/bs/BsGraphUp'
+import { MainDropDown } from '../MainDropDown'
+import ProfileStatsChart from '../ProfileStatsChart'
+import { EmptyActivityIcon } from '../SvgIcons'
+import GradientButton from '../GradientButton'
+import eventCreatorAvatar from '../../../assets/images/EventCreatorAvatar.png'
+
 import {
   ActivitySectionContainer,
   ActivitySectionHeader,
@@ -6,24 +15,27 @@ import {
   ActivitySectionBody,
   ActivityTable,
   EventCreatorProfile,
-  EventUserProfile
-} from './styles';
-
-import BsGraphUp from '@meronex/icons/bs/BsGraphUp';
-import { MainDropDown } from '../MainDropDown';
-import ProfileStatsChart from '../ProfileStatsChart';
-import { useTheme } from 'styled-components';
-import { EmptyActivityIcon } from '../SvgIcons';
-import { useGlobal } from '../../../contexts/GlobalContext';
-import eventCreatorAvatar from '../../../assets/images/EventCreatorAvatar.png';
+  EventUserProfile,
+  FilterWrapper
+} from './styles'
 
 const ActivitySection = () => {
+  const theme = useTheme()
+  const [users, setUsers] = useState([])
+  const { invokeServer } = useGlobal()
 
-  const theme = useTheme();
-  const [history, setHistory] = useState([]);
-  const [historyRows, setHistoryRows] = useState([]);
-  const [users, setUsers] = useState([]);
-  const { invokeServer } = useGlobal();
+  const [history, setHistory] = useState([])
+  const [historyRows, setHistoryRows] = useState([])
+  const [selectedPeriod, setSelectedPeriod] = useState('0')
+  const [selectedFilterItem, setSelectedFilterItem] = useState('')
+
+  console.log(history, 'This is history')
+
+  const filterList = [
+    { key: 'all', name: 'ALL' },
+    { key: 'buys', name: 'BUYS' },
+    { key: 'sales', name: 'SALES' },
+  ]
 
   const periodList = [
     { id: 0, name: 'One hour', value: '3600' },
@@ -45,10 +57,8 @@ const ActivitySection = () => {
     { id: 4, event: 'List', item: 'Joana Bruers', price: '0.33', quantity: '10', from: 'HyperX', to: '2899FaA..', time: '1 hour ago' },
     { id: 5, event: 'List', item: 'Joana Bruers', price: '0.33', quantity: '10', from: 'HyperX', to: '2899FaA..', time: '1 hour ago' },
     { id: 6, event: 'List', item: 'Joana Bruers', price: '0.33', quantity: '10', from: 'HyperX', to: '2899FaA..', time: '1 hour ago' },
-    { id: 7, event: 'List', item: 'Joana Bruers', price: '0.33', quantity: '10', from: 'HyperX', to: '2899FaA..', time: '1 hour ago' },
+    { id: 7, event: 'List', item: 'Joana Bruers', price: '0.33', quantity: '10', from: 'HyperX', to: '2899FaA..', time: '1 hour ago' }
   ]
-
-  const [selectedPeriod, setSelectedPeriod] = useState('0');
 
   const renderPriceField = (activity) => {
     switch (activity.paymentName) {
@@ -158,9 +168,27 @@ const ActivitySection = () => {
           selectedPeriod={selectedPeriod}
           setSelectedPeriod={setSelectedPeriod}
         />
+        <FilterWrapper>
+          {filterList.map(item => (
+            <GradientButton
+              key={item.key}
+              isNoPadding
+              width='100px'
+              height='40px'
+              label={item.name}
+              isBlackMode={selectedFilterItem !== item.key}
+              isDarkMode={selectedFilterItem !== item.key}
+              handleClick={() => setSelectedFilterItem(item.key)}
+            />
+          ))}
+        </FilterWrapper>
       </ActivitySectionFilter>
       <ActivitySectionBody>
-        <ProfileStatsChart period={parseInt(selectedPeriod)} setHistory={setHistory} />
+        <ProfileStatsChart
+          period={parseInt(selectedPeriod)}
+          setHistory={setHistory}
+          filterValue={selectedFilterItem}
+        />
         <ActivityTable>
           <table>
             <thead>
