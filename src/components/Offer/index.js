@@ -62,7 +62,7 @@ export const Offer = (props) => {
   const [offerInfo, setOfferInfo] = useState()
   const [offerLoaded, setOfferLoaded] = useState([]);
 
-  const offerTypes = ['Comments', 'Offer', 'Stats', 'Properties', 'Details'];
+  const offerTypes = ['Comments', 'Offer', 'Stats', 'Properties', 'Details', 'Settings'];
   const [activeTab, setActiveTab] = useState('Comments');
 
   const videoRef = useRef();
@@ -308,7 +308,17 @@ export const Offer = (props) => {
             </div>
           </div>
           <CommentContainer>
-            <CommentTab category={category} types={offerTypes} active={activeTab} setActive={setActiveTab} sales={nftSalesOnPurchase} nftItem={itemLoaded} comments={comments} refresh={reloadSaleInfoToOffer} offers={offerLoaded} />
+            <CommentTab
+              category={category}
+              types={offerTypes}
+              active={activeTab}
+              setActive={setActiveTab}
+              sales={nftSalesOnPurchase}
+              nftItem={itemLoaded}
+              comments={comments}
+              refresh={reloadSaleInfoToOffer}
+              offers={offerLoaded}
+            />
           </CommentContainer>
         </div>
       </div>

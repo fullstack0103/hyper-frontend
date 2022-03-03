@@ -12,6 +12,7 @@ import PropertyTabItem from '../PropertyTabItem';
 import SaleTabItem from '../SaleTabItem';
 import BidTabItem from '../BidTabItem';
 import StatsTabItem from '../StatsTabItem';
+import SettingsTabItem from '../SettingsTabItem'
 import { CommentIcon } from '../SvgIcons';
 import {
   CommentTabContainer,
@@ -128,6 +129,9 @@ const CommentTab = (props) => {
         </TabPanel>
         <TabPanel active={active === "Details"}>
           <DetailsTabItem />
+        </TabPanel>
+        <TabPanel active={active === 'Settings'}>
+          <SettingsTabItem />
         </TabPanel>
       </TabContent>
       {active === "Comments" && (
