@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const StatsEventTableContainer = styled.div`
 
@@ -68,6 +68,15 @@ export const EventCreatorProfile = styled.div`
     align-items: center;
     justify-content: left;
 
+    ${({ isEnable }) => isEnable && css`
+      cursor: pointer;
+      &:hover {
+        .value, title {
+          text-decoration: underline;
+        } 
+      }
+    `}
+
     img {
       width: 48px;
       height: 48px;
@@ -97,20 +106,21 @@ export const EventUserProfile = styled.div`
     align-items: center;
     justify-content: left;
 
+    ${({ isEnable }) => isEnable && css`
+      cursor: pointer;
+      &:hover {
+        .value {
+          text-decoration: underline;
+        } 
+      }
+    `}
+
     img {
       width: 24px;
       height: 24px;
       object-fit: cover;
       margin-right: 10px;
       border-radius: 50%;
-    }
-
-    .title {
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 15px;
-      color: #C4C4C4;
-      text-align: left;
     }
 
     .value {

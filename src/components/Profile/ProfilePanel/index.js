@@ -17,6 +17,8 @@ import { UserRole } from '../../../contexts/AuthContext';
 
 export const ProfilePanel = (props) => {
   const { ownerInfo } = props;
+
+  console.log(ownerInfo, 'This is ownerinfo')
   
   return (
     <ProfilePanelContainer>

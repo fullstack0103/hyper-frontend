@@ -32,8 +32,6 @@ export const Collections = (props) => {
     { key: 'popular', name: 'Popular' }
   ]
 
-  console.log(wallet, 'This is wallet')
-
   useEffect(() => {
     if (wallet.address === '' || auth.isLoggedIn !== true)
       return;
