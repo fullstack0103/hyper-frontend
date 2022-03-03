@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Route,
   Routes,
   Navigate,
-  useLocation,
-  useNavigate
+  // useNavigate
 } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
@@ -24,7 +23,7 @@ import { CollectionDetails } from './pages/CollectionDetails'
 import { CollectionCreator } from './pages/CollectionCreator'
 
 import ToastListener from './components/Toast'
-import { useAuth } from './contexts/AuthContext'
+// import { useAuth } from './contexts/AuthContext'
 
 export const App = () => {
 

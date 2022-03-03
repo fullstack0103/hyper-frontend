@@ -45,7 +45,8 @@ const StatsEventTable = (props) => {
     return (
       <EventCreatorProfile
         isEnable={tt}
-        // onClick={() => tt && navigate(`/products/${event?.collectionAddress.toLowerCase()}/${event?.tokenId}/${event?.saleId}/${event.method}`)}
+        onClick={() => console.log('Item click')}
+        // Change click event
       >
         <img src={nftAvatar} alt='nft' />
         <div>
