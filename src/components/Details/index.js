@@ -41,6 +41,7 @@ import { useData } from "../../contexts/DataContext";
 export const Details = (props) => {
   const { category } = props;
 
+  const theme = useTheme();
   const { collection, tokenId } = useParams();
 
   const { auth } = useAuth();
@@ -64,9 +65,9 @@ export const Details = (props) => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [timeRemainingText, setTimeRemainingText] = useState('');
 
-  const offerTypes = ['Comments', 'Offer', 'Stats', 'Properties', 'Details'];
-  const buyTypes = ['Comments', 'Buy', 'Stats', 'Properties', 'Details'];
-  const bidTypes = ['Bid', 'Auction', 'Comments', 'Stats', 'Properties', 'Details'];
+  const offerTypes = ['Comments', 'Offer', 'Stats', 'Properties', 'Details', 'Settings'];
+  const buyTypes = ['Comments', 'Buy', 'Stats', 'Properties', 'Details', 'Settings'];
+  const bidTypes = ['Bid', 'Auction', 'Comments', 'Stats', 'Properties', 'Details', 'Settings'];
   const [activeTab, setActiveTab] = useState(category === 'bid' ? 'Bid' : 'Comments');
 
   const videoRef = useRef();
@@ -320,7 +321,7 @@ export const Details = (props) => {
                 <div className="nft-review">
                   <IconLabelWrapper>
                     <ItemsIcon />
-                    <span>{nftItem?.totalSupply} item{nftItem?.totalSupply <= 1 ? '' : 's'}</span>
+                    <span>{nftItem?.totalSupply} {nftItem?.totalSupply <= 1 ? 'copy' : 'copies'}</span>
                   </IconLabelWrapper>
                   <IconLabelWrapper className="owned-by" onClick={() => setIsOwnedModal(true)}>
                     <UserListIcon />
@@ -343,10 +344,21 @@ export const Details = (props) => {
                     <span>{myFavorite?.count} favorite{myFavorite?.count <= 1 ? '' : 's'}</span>
                   </IconLabelWrapper>
                 </div>
+                <div className="nft-price">
+                  <span>PRICE</span>
+                  <div>
+                    <img src={theme.images.chainTokenIcon} alt='' />
+                    <span>0.003</span>
+                    <span>HyperX</span>
+                  </div>
+                  <span>
+                    $0.00
+                  </span>
+                </div>
               </div>
               <div className="user-detail">
                 <div onClick={() => navigate(`/profile/${creatorInfo?.address}`)}>
-                  <div className="username-label">{creatorInfo?.name}</div>
+                  <div className="username-label">Owner by {creatorInfo?.name}</div>
                   <div className="username-value">{creatorInfo?.address?.slice(0, 6) + '...' + creatorInfo?.address?.slice(-4)}</div>
                 </div>
                 <div onClick={() => navigate(`/profile/${creatorInfo?.address}`)}>
