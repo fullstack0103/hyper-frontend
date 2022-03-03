@@ -359,22 +359,26 @@ export const MainContent = (props) => {
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <label>Website</label>
-                <Input
-                  placeholder='Website url'
-                  name='website'
-                  type='text'
-                />
-              </FormGroup>
-              <FormGroup>
-                <label>Facebook</label>
-                <Input
-                  placeholder='Facebook url'
-                  name='facebook'
-                  type='text'
-                />
-              </FormGroup>
+              {auth?.loggedUserRole === 'creator' && (
+                <>
+                  <FormGroup>
+                    <label>Website</label>
+                    <Input
+                      placeholder='Website url'
+                      name='website'
+                      type='text'
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <label>Facebook</label>
+                    <Input
+                      placeholder='Facebook url'
+                      name='facebook'
+                      type='text'
+                    />
+                  </FormGroup>
+                </>
+              )}
               <FormGroup>
                 <label>Twitter</label>
                 <Input
