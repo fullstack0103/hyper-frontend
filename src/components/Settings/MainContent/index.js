@@ -11,6 +11,7 @@ import {
   Tab,
   ProjectInfoWrapper
 } from './styles'
+
 import settingCover from '../../../assets/images/setting-banner.png';
 import profileLogo from '../../../assets/images/profile-banner2.png';
 import FormInputBox from '../../Shared/FormInputBox';
@@ -26,6 +27,7 @@ import { useGlobal } from '../../../contexts/GlobalContext';
 import useToast from '../../../hooks/useToast';
 import { useCustomWallet } from '../../../contexts/WalletContext';
 import GradientButton from '../../Shared/GradientButton';
+import { Input, TextArea } from '../../Shared/InputBox';
 
 export const MainContent = (props) => {
 
@@ -336,55 +338,78 @@ export const MainContent = (props) => {
             </SettingBanner>
             <SettingForm>
               <FormGroup>
-                <FormInputBox
-                  title={'Name'}
-                  placeholder={'You can enter you full name, business name, or brand name'}
-                  name={'name'}
-                  type={'text'}
-                  required={true}
+                <label>Name *</label>
+                <Input
+                  placeholder='You can enter you full name, business name, or brand name'
+                  name='name'
+                  type='text'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete='off'
                 />
               </FormGroup>
               <FormGroup>
-                <FormInputBox
-                  title={'Username'}
-                  placeholder={'Choose a username for your profile'}
-                  name={'username'}
-                  type={'text'}
-                  required={true}
-                  value={auth.loggedUserName}
-                  onChange={() => { }}
+                <label>Username *</label>
+                <Input
+                  placeholder='Choose a username for your profile'
+                  name='username'
+                  type='text'
+                  defaultValue={auth.loggedUserName}
+                  required
                 />
               </FormGroup>
               <FormGroup>
-                <FormInputBox
-                  title={'Account Bio'}
-                  name={'account-bio'}
-                  type={'text-area'}
+                <label>Website</label>
+                <Input
+                  placeholder='Website url'
+                  name='website'
+                  type='text'
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Facebook</label>
+                <Input
+                  placeholder='Facebook url'
+                  name='facebook'
+                  type='text'
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Twitter</label>
+                <Input
+                  placeholder='Twitter url'
+                  name='twitter'
+                  type='text'
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <label>Account Bio</label>
+                <TextArea
+                  name='account_bio'
+                  rows={4}
                   value={accountBio}
                   onChange={(e) => setAccountBio(e.target.value)}
                 />
               </FormGroup>
               <FormGroup>
-                <FormInputBox
-                  title={'Wallet Address'}
-                  description={'Our account ownership is controlled by your wallet. The above wallet address currently controls access to you account'}
-                  name={'wallet-address'}
-                  type={'text'}
-                  value={wallet.address}
-                  onChange={() => { }}
+                <label>Wallet Address</label>
+                <Input
+                  name='wallet-address'
+                  defaultValue={wallet.address}
                 />
+                <p>
+                  Our account ownership is controlled by your wallet. The above wallet address currently controls access to you account
+                </p>
               </FormGroup>
               <FormGroup>
-                <FormInputBox
-                  title={'Email Address'}
-                  placeholder={'This is where push notifications and account updates will be sent.'}
-                  name={'email'}
-                  type={'text'}
+                <label>Email Address</label>
+                <Input
+                  name='email'
+                  placeholder='This is where push notifications and account updates will be sent.'
                   required={true}
-                  value={auth.loggedEmailName}
-                  onChange={() => { }}
+                  defaultValue={auth.loggedEmailName}
                 />
               </FormGroup>
               <GradientButton

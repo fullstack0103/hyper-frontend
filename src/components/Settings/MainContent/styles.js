@@ -127,7 +127,25 @@ export const SettingForm = styled.div`
 `;
 
 export const FormGroup = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 23px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #FFFFFF;
+    margin-bottom: 13px;
+  }
+
+  p {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #FFFFFF;
+    margin-bottom: 13px;
+  }
 `;
 
 export const VerificationSection = styled.div`

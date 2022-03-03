@@ -9,6 +9,7 @@ const FormInputBox = (props) => {
     name,
     type,
     value,
+    defaultValue,
     placeholder,
     required,
     onChange
@@ -35,7 +36,8 @@ const FormInputBox = (props) => {
           name={name}
           id={title}
           type={type}
-          value={value} 
+          value={value}
+          defaultValue={defaultValue}
           placeholder={placeholder} 
           required={required}
           autoComplete={'off'}
