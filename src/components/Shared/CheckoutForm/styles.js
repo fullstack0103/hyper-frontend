@@ -37,7 +37,7 @@ export const WelComeCheckout = styled.div`
 `;
 
 export const CheckoutDetail = styled.div`
-  margin-top: 70px;
+  margin-top: 50px;
 
   .divider {
     border-bottom: 1px solid #000;
@@ -90,3 +90,59 @@ export const CheckoutTerms = styled.div`
   margin-top: 20px;
   margin-bottom: 87px;
 `;
+
+export const AmountContainer = styled.div`
+  margin-top: 20px;
+  input[type=number] {
+    &::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    cursor:pointer;
+    display:block;
+    width:8px;
+    color: #333;
+    text-align:center;
+    position:relative;
+    }
+    &:hover::-webkit-inner-spin-button { 
+      background: #00000040 url('/icons/number-arrow.png') no-repeat 50% 50%;  
+      width: 14px;
+      height: 14px;
+      padding: 4px;
+      position: relative;
+      right: 4px;
+      border-radius: 28px;
+    }
+  }
+
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    input {
+      height: 42px;
+      flex: 1;
+      margin-right: 20px;
+      padding: 10px 15px;
+    }
+  }
+`
+export const OutlineBox = styled.div`
+  border: 1px solid #40475D;
+  border-radius: 10px;
+  color: #C4C4C4;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 25px;
+`
