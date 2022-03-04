@@ -28,6 +28,15 @@ export const CardItemContainer = styled.div`
         background: -webkit-linear-gradient(0deg,#eeb200,#00c0f5 98.27%);
       }
     }
+
+    .card-footer {
+      .footer-logos-wrapper {
+        display: none;
+      }
+      .footer-sale-type {
+        display: block;
+      }
+    }
   }
 
   @media (max-width: 1440px) {
@@ -69,14 +78,22 @@ export const CardItemContainer = styled.div`
 
   .card-video-container {
     position: relative;
-    display: grid;
+    display: flex;
     height: 100%;
+    justify-content: center;
+    padding: 0 13px;
   }
   
   .card-image-container {
     position: relative;
-    display: grid;
+    display: flex;
     height: 100%;
+    justify-content: center;
+    padding: 0 13px;
+
+    span {
+      width: 100%;
+    }
     
     img {
       width: 100%;
@@ -133,34 +150,18 @@ export const CardItemContainer = styled.div`
 
   .card-details {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 0 13px;
+    padding: 13px;
   }
 
   .card-action-detail {
     display: flex;
-    align-items: center;    
-
-    .card-favorite, .card-message {
-      display: flex;
-      align-items: center;
-      margin-right: 7px;
-
-      >svg {
-        width: 14px;
-        height: 14px;
-        color: #A3FF12;
-      }
-
-      >span {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 15px;
-        color: #FFFFFF;
-        margin-left: 4px;
-      }
-    }
+    flex-direction: column;
+    color: #FFF;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
   }
 
   .card-price-detail {
@@ -173,7 +174,11 @@ export const CardItemContainer = styled.div`
     line-height: 13px;
     color: #FFFFFF;
     white-space: pre-wrap;
-    margin-top: 11px;
+
+    .price {
+      text-align: right;
+      font-weight: 500;
+    }
 
     .card-price-type {
       display: flex;
@@ -269,6 +274,52 @@ export const CardItemContainer = styled.div`
       width: calc(100% - 20px);
       bottom: 1px;
       left: 10px;
+    }
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 13px;
+    height: 25px;
+
+    .footer-logos-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-sale-type {
+      display: none;
+      span {
+        color: #A3FF12;
+        font-weight: 800;
+      }
+    }
+
+    .card-favorite, .card-message {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        cursor: pointer;
+        display: flex;
+        >svg {
+          width: 14px;
+          height: 14px;
+          color: #A3FF12;
+        }
+      }
+
+
+      >span {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: #FFFFFF;
+        margin-left: 4px;
+      }
     }
   }
 `;

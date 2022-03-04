@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { SideBarFilterSectionContainer, FilterContent } from './styles'
 import { useTheme } from 'styled-components'
 
 import Accordion from '../Accordion'
@@ -7,7 +6,17 @@ import CheckBox from '../CheckBox'
 import { IconDropDown } from '../IconDropDown'
 import RangeSlider from '../RangeSlider'
 import { ArrowLeftIcon, ArrowRightIcon, FilterSharpIcon } from '../SvgIcons'
+import GradientButton from '../GradientButton'
+import { Select } from '../Select'
 import { useLocation } from 'react-router-dom'
+import {
+  SideBarFilterSectionContainer,
+  FilterContent,
+  ResetButtonWrapper,
+  CategoryFilterContainer,
+  SelectContainer,
+  Option
+} from './styles'
 
 export const SideBarFilterSection = (props) => {
 
@@ -43,6 +52,8 @@ export const SideBarFilterSection = (props) => {
     filterParams?.mintID?.max || filterParams?.mintID?.maxSetting
   ]);
 
+  const [topLevelCategory, setTopLevelCategory] = useState('all')
+
   const sortTypeList = [
     { id: 0, name: 'Recently Listed', key: 'latest_list' },
     { id: 1, name: 'Recently Sold', key: 'latest_sold' },
@@ -70,6 +81,29 @@ export const SideBarFilterSection = (props) => {
   const defaultStatusList = [
     { id: 0, name: 'Fixed-Price', key: 'buy' },
     { id: 1, name: 'Auction', key: 'bid' }
+  ]
+
+  const topLevelOptions = [
+    { value: 'all', content: <Option>All</Option> },
+    { value: 'games', content: <Option>Games</Option> },
+  ]
+  const depth1Options = [
+    { value: 'depth1_1', content: <Option>Disito</Option> },
+    { value: 'depth1_2', content: <Option>Disito 2</Option> },
+    { value: 'depth1_3', content: <Option>Disito 3</Option> },
+    { value: 'depth1_4', content: <Option>Disito 4</Option> }
+  ]
+  const depth2Options = [
+    { value: 'depth2_1', content: <Option>Weapon</Option> },
+    { value: 'depth2_2', content: <Option>Weapon 2</Option> },
+    { value: 'depth2_3', content: <Option>Weapon 3</Option> },
+    { value: 'depth2_4', content: <Option>Weapon 4</Option> }
+  ]
+  const depth3Options = [
+    { value: 'depth3_1', content: <Option>Category 1</Option> },
+    { value: 'depth3_2', content: <Option>Category 2</Option> },
+    { value: 'depth3_3', content: <Option>Category 3</Option> },
+    { value: 'depth3_4', content: <Option>Category 4</Option> }
   ]
 
   const handleChangeIds = (id, idGroup, setIdGroup) => {
@@ -217,6 +251,53 @@ export const SideBarFilterSection = (props) => {
             <IconDropDown viewTypeList={sortTypeList} initialType={filterParams?.sort?.key || sortTypeList[0].key} onChange={handleChangeSortType} />
           </div>
         </Accordion>
+        <Accordion title='Category'>
+          <CategoryFilterContainer>
+            <SelectContainer isTop>
+              <Select
+                notReload
+                options={topLevelOptions}
+                placeholder='Select category'
+                defaultValue={topLevelCategory}
+                onChange={val => setTopLevelCategory(val)}
+              />
+            </SelectContainer>
+            {topLevelCategory !== 'all' && (
+              <>
+                <SelectContainer>
+                  <label>Select Depth-1 Category</label>
+                  <Select
+                    notReload
+                    options={depth1Options}
+                    placeholder='Select depth-1 category'
+                    defaultValue='depth1_1'
+                    onChange={val => console.log(val)}
+                  />
+                </SelectContainer>
+                <SelectContainer>
+                  <label>Select Depth-2 Category</label>
+                  <Select
+                    notReload
+                    options={depth2Options}
+                    placeholder='Select depth-2 category'
+                    defaultValue='depth2_1'
+                    onChange={val => console.log(val)}
+                  />
+                </SelectContainer>
+                <SelectContainer>
+                  <label>Select Depth-3 Category</label>
+                  <Select
+                    notReload
+                    options={depth3Options}
+                    placeholder='Select depth-3 category'
+                    defaultValue='depth3_1'
+                    onChange={val => console.log(val)}
+                  />
+                </SelectContainer>
+              </>
+            )}
+          </CategoryFilterContainer>
+        </Accordion>
         <Accordion title="Price">
           <div className="priceType-div">
             <IconDropDown viewTypeList={viewTypeList} initialType={viewTypeList[0].key} onChange={handleChangePriceType} />
@@ -286,6 +367,13 @@ export const SideBarFilterSection = (props) => {
             />
           </div>
         </Accordion>
+        <ResetButtonWrapper>
+          <GradientButton
+            isNaked
+            label='RESET ALL FILTERS'
+            handleClick={() => {}}
+          />
+        </ResetButtonWrapper>
       </FilterContent>
     </SideBarFilterSectionContainer>
   )

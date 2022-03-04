@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useSaleItem } from "../../../contexts/SaleContext";
 import GradientButton from "../GradientButton";
 import BigNumber from 'bignumber.js'
+import { Input } from '../InputBox';
 
 import { 
   CheckoutFormContainer, 
   WelComeCheckout, 
   CheckoutDetail,
-  CheckoutTerms
+  CheckoutTerms,
+  AmountContainer,
+  OutlineBox
 } from "./styles";
+
 import { useContract } from "../../../contexts/ContractContext";
 import { useCustomWallet } from "../../../contexts/WalletContext";
 
@@ -51,6 +55,18 @@ export const CheckoutForm = (props) => {
         <div className="welcome-text">You are about to purchase</div>
         <div className="user-name"><span>{saleInfo?.copy} x</span> {nftItem?.title}</div>
       </WelComeCheckout>
+      <AmountContainer>
+        <label>Amount to buy</label>
+        <div>
+          <Input
+            type='number'
+            defaultValue={1}
+            min={1}
+            max={99}
+          />
+          <OutlineBox>1/96</OutlineBox>
+        </div>
+      </AmountContainer>
       <CheckoutDetail>
         <div className="flex-div">
           <div className="purchase-label">Your purchase</div>
@@ -58,7 +74,10 @@ export const CheckoutForm = (props) => {
         </div>
 
         <div className="divider"></div>
-
+        <div className="flex-div">
+          <div className="purchase-label">Royalty Fee</div>
+          <div className="purchase-desc">0.00075</div>
+        </div>
         <div className="flex-div">
           <div className="purchase-label">Service Fee</div>
           <div className="purchase-desc">{serviceFeeCalculate(saleInfo)}</div>

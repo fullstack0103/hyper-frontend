@@ -4,6 +4,7 @@ import videoOverlay from '../../../assets/images/video-overlay.svg'
 import { CardItemContainer, CardAvatar } from './styles';
 import FaUserCircle from '@meronex/icons/fa/FaUserCircle';
 import AiOutlineHeart from '@meronex/icons/ai/AiOutlineHeart';
+import AiFillHeart from '@meronex/icons/ai/AiFillHeart';
 import AiOutlineWechat from '@meronex/icons/ai/AiOutlineWechat';
 import Skeleton from 'react-loading-skeleton'
 import { useContract } from '../../../contexts/ContractContext';
@@ -32,6 +33,7 @@ const CardItem = (props) => {
   const [isImage, setIsImage] = useState(true);
 
   const [priceUSD, setPriceUSD] = useState(0.0);
+  const [isLiked, setIsLiked] = useState(false)
 
   const videoRef = useRef(null);
 
@@ -143,7 +145,9 @@ const CardItem = (props) => {
         </div>
         <div className="card-media" onClick={onClick}>
           {isSkeleton ? (
-            <Skeleton height={230} />
+            <div className="card-image-container">
+              <Skeleton height={230} />
+            </div>
           ) : (
             <>
               {isImage ? (
@@ -176,19 +180,26 @@ const CardItem = (props) => {
             {isSkeleton ? (
               <Skeleton width={60} height={14} />
             ) : (
+                <div className='collection-name'>Collection name</div>
+            )}
+            {isSkeleton ? (
+              <Skeleton width={60} height={14} />
+            ) : (
               <>
-                <div className="card-favorite">
-                  <AiOutlineHeart />
-                  <span>{item && item.favoriteCount}</span>
-                </div>
-                <div className="card-message">
-                  <AiOutlineWechat />
-                  <span>{item && item.commentCount}</span>
-                </div>
+                <div className='nft-name'>{item?.title}</div>
               </>
             )}
           </div>
           <div className="card-price-detail">
+            <div className='price'>
+              {isSkeleton ? (
+                <Skeleton width={50} height={10} />
+              ) : (
+                <span>
+                  {sale.method === 2 ? 'FLOOR' : 'PRICE'}
+                </span>
+              )}
+            </div>
             <div className="card-price-type">
               {isSkeleton ? (
                 <Skeleton width={50} height={10} />
@@ -217,6 +228,52 @@ const CardItem = (props) => {
               )}
             </div>
           </div>
+        </div>
+        <div className='card-footer'>
+          <div className='footer-logos-wrapper'>
+            {isSkeleton ? (
+              <Skeleton width={16} height={16} />
+            ) : (
+              <>
+                {sale.method === 2 ? (
+                  <>
+                    <img src={theme.images.binanceUsdIcon} alt='' />
+                    <img src={theme.images.binanceTokenIcon} alt='' />
+                  </>
+                ) : (
+                  <img src={theme.images.chainTokenIcon} alt='' />
+                )}
+              </>
+            )}
+          </div>
+          <div className='footer-sale-type'>
+            {isSkeleton ? (
+              <Skeleton width={20} height={20} />
+            ) : (
+              <>
+                {sale && <span>{sale.method === 0 ? 'buy' : sale.method === 1 ? 'bid' : sale.method === 2 ? 'offer' : ''}</span>}
+              </>
+            )}
+          </div>
+          {isSkeleton ? (
+            <Skeleton width={25} height={15} />
+          ) : (
+            <>
+              <div className="card-favorite">
+                <span
+                  className='icon'
+                  onClick={() => setIsLiked(true)}
+                >
+                  {isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
+                </span>
+                <span>{item && item.favoriteCount}</span>
+              </div>
+              {/* <div className="card-message">
+                <AiOutlineWechat />
+                <span>{item && item.commentCount}</span>
+              </div> */}
+            </>
+          )}
         </div>
 
         {item?.isMultiple && (
