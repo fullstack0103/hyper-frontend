@@ -8,7 +8,15 @@ import { MainContentContainer, CardList, FilterWrapper } from "./styles";
 const PIXELS_TO_SCROLL = 100;
 
 export const MainContent = (props) => {
-  const { isOpenRightMenu, isMoreView, isLoading, sales, nfts } = props;
+  const {
+    isOpenRightMenu,
+    isMoreView,
+    isLoading,
+    sales,
+    nfts,
+    selectedFilterItem,
+    setSelectedFilterItem
+  } = props;
 
   console.log('++++ sales', sales);
   console.log('++++ nfts', nfts);
@@ -19,7 +27,6 @@ export const MainContent = (props) => {
   const itemsRef = useRef(null);
   const [loadedSales, setLoadedSales] = useState([]);
   const [isLoadMore, setIsLoadMore] = useState(false);
-  const [selectedFilterItem, setSelectedFilterItem] = useState("all");
 
   const filterList = [
     { key: "all", name: "All" },
@@ -108,7 +115,7 @@ export const MainContent = (props) => {
           : { display: "block" }
       }
     >
-      {sales.length > 0 ? (
+      {(sales.length > 0 || nfts?.length > 0) ? (
         <>
           <FilterWrapper>
             {filterList.map((item) => (
@@ -129,24 +136,35 @@ export const MainContent = (props) => {
               [...Array(15).keys()].map((i) => <CardItem key={i} isSkeleton />)
             ) : (
               <>
-                {loadedSales.map((item, index) => {
-                  let tt = nfts.filter(
-                    (t) =>
-                      t.collectionAddress.toLowerCase() ===
-                        item.collectionAddress.toLowerCase() &&
-                      t.tokenId === item.tokenId
-                  );
-                  return tt.length > 0 ? (
+                {selectedFilterItem !== 'all' ? (
+                  loadedSales.map((item, index) => {
+                    let tt = nfts.filter(
+                      (t) =>
+                        t.collectionAddress.toLowerCase() ===
+                          item.collectionAddress.toLowerCase() &&
+                        t.tokenId === item.tokenId
+                    );
+                    return tt.length > 0 ? (
+                      <CardItem
+                        key={index}
+                        item={tt[0]}
+                        sale={item}
+                        onClick={() => handleDetails(item)}
+                      />
+                    ) : (
+                      <></>
+                    );
+                  })
+                ) : (
+                  nfts.map((nft, index) => (
                     <CardItem
                       key={index}
-                      item={tt[0]}
-                      sale={item}
-                      onClick={() => handleDetails(item)}
+                      item={nft}
+                      // sale={nft}
+                      // onClick={() => handleDetails(nft)}
                     />
-                  ) : (
-                    <></>
-                  );
-                })}
+                  ))
+                )}
                 {isLoadMore &&
                   [...Array(15).keys()].map((i) => (
                     <CardItem key={i} isSkeleton />
