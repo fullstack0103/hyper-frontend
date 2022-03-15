@@ -10,6 +10,7 @@ import { useData } from '../../contexts/DataContext'
 import { useContract } from '../../contexts/ContractContext'
 
 export const Home = (props) => {
+  const [selectedFilterItem, setSelectedFilterItem] = useState("all");
 
   const location = useLocation();
 
@@ -45,24 +46,51 @@ export const Home = (props) => {
 
   useEffect(() => {
     let ac = new AbortController();
-
-    setIsLoading(true);
-    setSales(t => []);
-
-    if (location.pathname.includes('/explorer')) {
-      console.log('---------- sale ------------')
-      invokeServer('get', `/api/sale`)
-        .then(res => {
-          if (ac.signal.aborted === false) {
+  
+    switch (selectedFilterItem) {
+      case 'all':
+        setSales(t => []);
+        break;
+      case 'listed':
+        setIsLoading(true);
+        invokeServer('get', `/api/sale`)
+          .then(res => {
+            if (ac.signal.aborted === false) {
+              setIsLoading(t => false);
+              setSales(t => res.data.sales)
+            }
+          })
+          .catch(err => {
             setIsLoading(t => false);
-            setSales(t => res.data.sales)
-          }
-        })
-        .catch(err => {
-          setIsLoading(t => false);
-          console.log(err);
-        })
-    } else if (location.pathname.includes('/offer')) {
+            console.log(err);
+          })
+        break;
+      case 'unlisted':
+        setIsLoading(true);
+        invokeServer('get', `/api/sale?unlisted=`)
+          .then(res => {
+            if (ac.signal.aborted === false) {
+              setIsLoading(t => false);
+              setSales(t => res.data.sales)
+            }
+          })
+          .catch(err => {
+            setIsLoading(t => false);
+            console.log(err);
+          })
+        break;
+      default:
+        setSales(t => []);
+        break;
+    }
+  }, [selectedFilterItem])
+
+  useEffect(() => {
+    let ac = new AbortController();
+    if (location.pathname.includes('/offer')) {
+  
+      setIsLoading(true);
+      setSales(t => []);
       console.log('---------- offer ------------')
       invokeServer('get', `/api/sale?unlisted=`)
         .then(res => {
@@ -82,17 +110,6 @@ export const Home = (props) => {
 
   useEffect(() => {
     console.log('---------- nft ------------')
-    let ac = new AbortController();
-    invokeServer('get', `/api/nft`)
-      .then(res => {
-        if (ac.signal.aborted === false) {
-          setNFTLoaded(res.data.nft)
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-
     if (sales.length > 0) {
       let priceUSDList = sales.map(t => {
         let priceUSD = parseFloat(convertPrice(t.payment, t.price));
@@ -125,9 +142,21 @@ export const Home = (props) => {
         }
       })
     }
-
-    return () => ac.abort();
   }, [sales])
+
+  useEffect(() => {
+    let ac = new AbortController();
+    invokeServer('get', `/api/nft`)
+      .then(res => {
+        if (ac.signal.aborted === false) {
+          setNFTLoaded(res.data.nft)
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    return () => ac.abort();
+  }, [])
 
   useEffect(() => {
     setIsLoading(t => true);
@@ -363,7 +392,15 @@ export const Home = (props) => {
             />
           </SideBarMenuContainer>
         )}
-        <MainContent isOpenRightMenu={isOpenSideMenu} isMoreView={isMoreView} isLoading={isLoading} sales={salesFiltered} nfts={nftFiltered} />
+        <MainContent
+          isOpenRightMenu={isOpenSideMenu}
+          isMoreView={isMoreView}
+          isLoading={isLoading}
+          sales={salesFiltered}
+          nfts={nftFiltered}
+          selectedFilterItem={selectedFilterItem}
+          setSelectedFilterItem={setSelectedFilterItem}
+        />
       </HomeContainer>
       {windowSize.width < 576 && <HomeNavigationBar
         isMoreView={isMoreView}
