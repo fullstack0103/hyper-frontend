@@ -248,7 +248,7 @@ export const Header = (props) => {
                         <PopUpNotificationItem notificationList={notItems} />
                       </PopUpIconMenu>
                     </div>
-                    <div className="nav-logged-user-section">
+                    <div className="nav-logged-user-section no-right">
                       {auth.loggedUserRole === UserRole.Creator && <div className='creator-icon'><VerifiedIcon /></div>}
                       <PopUpIconMenu
                         width={'211px'}

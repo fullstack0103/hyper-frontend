@@ -109,6 +109,10 @@ export const HeaderContainer = styled.div`
   .nav-logged-user-section {
     margin-right: 44px;
 
+    &.no-right {
+      margin-right: 0px;
+    }
+
     .creator-icon {
       width: 12px;
       height: 12px;
