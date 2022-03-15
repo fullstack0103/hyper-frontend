@@ -23,9 +23,9 @@ export const Creator = (props) => {
     <CreatorContainer
       onClick={() => navigate(`/profile/${creator?.address}`)}
     >
-      <HeaderImage bgimage={creator?.coverURI} />
+      <HeaderImage bgimage={creator?.coverURI? creator.coverURI: '/images/on1force.png'} />
       <CreatorLogoWrapper>
-        <img src={creator?.avatarURI} alt='' />
+        <img src={creator?.avatarURI? creator.avatarURI : '/images/profile-user-1.png'} alt='' />
       </CreatorLogoWrapper>
       <DetailWrapper>
         <h1>{creator?.name}</h1>

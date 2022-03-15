@@ -112,8 +112,8 @@ export const WalletProvider = (props) => {
     }, [defWallet])
 
     useEffect(() => {
-        if (isMobile) defWallet.connect('walletconnect');
-        else defWallet.connect();
+        // if (isMobile) defWallet.connect('walletconnect');
+        // else defWallet.connect();
     }, [])
 
     useEffect(() => {
@@ -135,6 +135,7 @@ export const WalletProvider = (props) => {
     }
 
     const disconnectWallet = () => {
+      defWallet.reset();
     }
 
     return (

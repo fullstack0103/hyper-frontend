@@ -161,7 +161,7 @@ export const ContractProvider = (props) => {
                 .on("receipt", (receipt) => {
                     // console.log(receipt);
                     tx = receipt;
-                    toastSuccess("Success", "collection created");
+                    toastSuccess("Success", "A collection created successfully.");
                     return;
                 })
                 .on('confirmation', (confirmationNumber, receipt) => {})

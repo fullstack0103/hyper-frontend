@@ -50,6 +50,7 @@ export const Home = (props) => {
     setSales(t => []);
 
     if (location.pathname.includes('/explorer')) {
+      console.log('---------- sale ------------')
       invokeServer('get', `/api/sale`)
         .then(res => {
           if (ac.signal.aborted === false) {
@@ -62,6 +63,7 @@ export const Home = (props) => {
           console.log(err);
         })
     } else if (location.pathname.includes('/offer')) {
+      console.log('---------- offer ------------')
       invokeServer('get', `/api/sale?unlisted=`)
         .then(res => {
           if (ac.signal.aborted === false) {
@@ -79,6 +81,7 @@ export const Home = (props) => {
   }, [reloadSaleCounter])
 
   useEffect(() => {
+    console.log('---------- nft ------------')
     let ac = new AbortController();
     invokeServer('get', `/api/nft`)
       .then(res => {

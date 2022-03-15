@@ -60,7 +60,7 @@ const SaleTabItem = (props) => {
         <div className='btn-buy'>
           {data?.seller?.toLowerCase() === wallet.address.toLowerCase() ? <></> :
             (
-              auth.isLoggedIn === true?
+              wallet.address?
               <GradientButton
                 label={
                   type === 'buy' ? 'buy'

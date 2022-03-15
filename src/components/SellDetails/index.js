@@ -237,7 +237,7 @@ export const SellDetails = () => {
                     <MenuList>
                       <div onClick={handleShare}>Share</div>
                       <div onClick={handleRefresh}>Refresh</div>
-                      { auth.isLoggedIn === true? <div onClick={handleReport}>Report</div> : <></>}
+                      { wallet.address? <div onClick={handleReport}>Report</div> : <></>}
                     </MenuList>
                   )}
                 </MoreDetailWrapper>
@@ -252,7 +252,7 @@ export const SellDetails = () => {
               <div className="action-container">
                 <div className="button-container">
                   <div className="button-group">
-                    {auth.isLoggedIn && (balance > saleCount ? (
+                    {wallet.address && (balance > saleCount ? (
                       <GradientButton
                         label={'Sell now'}
                         height={'42px'}
@@ -263,11 +263,11 @@ export const SellDetails = () => {
                       />
                     ) : (<div className='no-balance'>No one to sell</div>)
                     )}
-                    {auth.isLoggedIn !== true && (
+                    {!wallet.address && (
                       <div className='signin-please'>Please sign-in</div>
                     )}
                   </div>
-                  {auth.isLoggedIn === true && <OutlineBox>{balance - saleCount}/{balance}</OutlineBox>}
+                  {wallet.address && <OutlineBox>{balance - saleCount}/{balance}</OutlineBox>}
                 </div>
               </div>
             </div>

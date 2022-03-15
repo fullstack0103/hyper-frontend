@@ -21,6 +21,7 @@ import {
 } from './styles'
 import { useGlobal } from '../../contexts/GlobalContext'
 import useToast from '../../hooks/useToast'
+import STATUS from '../../global/const'
 
 export const CollectionDetails = (props) => {
   const {
@@ -51,9 +52,7 @@ export const CollectionDetails = (props) => {
   useEffect(() => {
     invokeServer('get', `/api/collection?owner=&extra=one&address=${contractAddress}`)
       .then(res => {
-        if (res.data.result == 0) {
-          toastInfo('Warning', res.data.msg);
-        } else if (res.data.result == 1) {
+        if (res.data.status === STATUS.OK) {
           let t = res.data.collections[0];
           setCollection(prev => { return {
             id: t._id,
@@ -67,6 +66,8 @@ export const CollectionDetails = (props) => {
             site: "www.on1force.com",
             contractAddress: t.contractAddress
           }});
+        } else {
+          toastInfo('Warning', res.data.msg);
         }
       })
       .catch(err => {

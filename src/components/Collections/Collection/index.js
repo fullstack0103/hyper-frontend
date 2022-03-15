@@ -49,7 +49,7 @@ export const Collection = (props) => {
           <DetailInfo>
             <NineGridIcon />
             {/* <span>Volume {collection.tradeVolume.toFixed(2)}$</span>      */}
-            <span>Volume {(collection.tradeVolume ?? 0).toFixed(2)}$</span>     
+            <span>Volume {collection.tradeVolume ?? 0}$</span>     
           </DetailInfo>
         </DetailInfoWrapper>
         <Description>{collection?.description}</Description>

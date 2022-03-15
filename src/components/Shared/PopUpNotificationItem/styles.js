@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const PopUpNotificationItemContainer = styled.div`
-
   .notification-empty {
     padding-top: 15px;
     padding-bottom: 10px;
@@ -28,5 +27,15 @@ export const PopUpNotificationItemContainer = styled.div`
       text-align: center;
       color: #C4C4C4;
     }
+  }
+
+  > p {
+    color: ${props => props.theme.colors.primary};
+    user-select: none;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-transform: uppercase;
   }
 `;

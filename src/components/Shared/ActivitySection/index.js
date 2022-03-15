@@ -29,12 +29,10 @@ const ActivitySection = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('0')
   const [selectedFilterItem, setSelectedFilterItem] = useState('')
 
-  console.log(history, 'This is history')
-
   const filterList = [
     { key: 'all', name: 'ALL' },
     { key: 'buys', name: 'BUYS' },
-    { key: 'sales', name: 'SALES' },
+    { key: 'sales', name: 'SALES' }
   ]
 
   const periodList = [

@@ -5,6 +5,7 @@ import { ProfilePanel } from '../ProfilePanel'
 import { ProfilePageSections } from '../index'
 import ActivitySection from '../../Shared/ActivitySection'
 import OfferSection from '../../Shared/OfferSection'
+import Notifications from '../../Shared/Notifications'
 import { EmptyFolderIcon } from '../../Shared/SvgIcons'
 import GradientButton from '../../Shared/GradientButton'
 import HideNFTSection from '../../Shared/HideNFTSection'
@@ -20,6 +21,8 @@ import {
   FilterWrapper,
   Option
 } from './styles'
+import AuctionSection from '../../Shared/AuctionSection'
+import ListingSection from '../../Shared/ListingSection'
 
 export const MainContent = (props) => {
   const {
@@ -235,6 +238,24 @@ export const MainContent = (props) => {
         return (
           <div className="offer-section">
             <OfferSection />
+          </div>
+        )
+      case ProfilePageSections.notifications:
+      return (
+        <div className="offer-section">
+          <Notifications />
+        </div>
+      )
+      case ProfilePageSections.auction:
+      return (
+        <div className="offer-section">
+          <AuctionSection />
+        </div>
+      )
+      case ProfilePageSections.listing:
+        return (
+          <div className="offer-section">
+            <ListingSection />
           </div>
         )
       case ProfilePageSections.hideNFT:

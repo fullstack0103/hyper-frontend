@@ -1,0 +1,9 @@
+const STATUS = {
+  OK: 200,
+  NO_CONTENT: 204,
+  SERVER_ERROR: 500,
+  FORBIDDEN: 403,
+  UNAUTHERIZIED: 401,
+};
+
+export default STATUS;

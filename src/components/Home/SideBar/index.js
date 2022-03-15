@@ -17,6 +17,7 @@ import { SideBarAllSection } from '../../Shared/SideBarAllSection';
 import { useAuth, UserRole } from '../../../contexts/AuthContext';
 import HyperTooltip from '../../Shared/HyperTooltip';
 import { useCustomWallet } from '../../../contexts/WalletContext';
+import walletConfig from '../../../contexts/WalletContext/config';
 
 export const SideBar = (props) => {
 
@@ -31,7 +32,7 @@ export const SideBar = (props) => {
   } = props
 
   const { auth } = useAuth();
-  const { getWalletAddressBySessionKey } = useCustomWallet();
+  const { wallet, getWalletAddressBySessionKey } = useCustomWallet();
 
   const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState('');
@@ -89,7 +90,7 @@ export const SideBar = (props) => {
               <FilterSharpIcon />
             </HyperTooltip>
           </div>
-          {auth.isLoggedIn && (
+          {wallet.address && (
             <>
               {auth.loggedUserRole === UserRole.Creator ?
                 <div className="upload-sharp" onClick={() => navigate('/upload')}>

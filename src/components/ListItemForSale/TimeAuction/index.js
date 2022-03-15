@@ -25,13 +25,14 @@ import useToast from '../../../hooks/useToast'
 import { useGlobal } from '../../../contexts/GlobalContext'
 import { useCustomWallet } from '../../../contexts/WalletContext'
 import { useAuth, UserRole } from '../../../contexts/AuthContext'
+import walletConfig from '../../../contexts/WalletContext/config'
 
 export const TimeAuction = (props) => {
   const { item, defFee } = props;
 
   const { showLoading, hideLoading, toastError, toastInfo } = useToast();
   const { invokeServer } = useGlobal();
-  const { getWalletAddressBySessionKey } = useCustomWallet();
+  const { wallet, getWalletAddressBySessionKey } = useCustomWallet();
   const { auth } = useAuth();
   const { convertPrice, createSale, tokenAmountWithoutDecimal, tokenAmountWithDecimal, getPaymentName } = useContract();
 
@@ -72,11 +73,11 @@ export const TimeAuction = (props) => {
   const [customDays, setCustomDays] = useState(dateListOptions[1].days);
 
   useEffect(() => {
-    if (auth.isLoggedIn) {
+    if (wallet.address) {
       if (auth.loggedUserRole === UserRole.Creator) {
-        invokeServer('get', `/api/creator?info=payment&address=${getWalletAddressBySessionKey()}`)
+        invokeServer('get', `/api/creators?info=payment&address=${getWalletAddressBySessionKey()}`)
           .then(r => {
-            let ret = r.data.payments;
+            let ret = r.data.data;
             let newrs = ret.map(t => {
               let tval = tokenOptions.find(ttt => ttt.id === t.id);
               return {
@@ -95,7 +96,7 @@ export const TimeAuction = (props) => {
         setTokenPayments(tt => [tokenOptions[0], tokenOptions[1]])
       }
     }
-  }, [auth.isLoggedIn, auth.loggedUserRole, getWalletAddressBySessionKey])
+  }, [wallet.address, auth.loggedUserRole, getWalletAddressBySessionKey])
 
   const handleDateChange = (val) => {
     setIsCustomDate(t => val === 'custom');

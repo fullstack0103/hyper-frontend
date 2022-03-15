@@ -377,7 +377,7 @@ export const Details = (props) => {
                     <MenuList>
                       <div onClick={handleShare}>Share</div>
                       <div onClick={handleRefresh}>Refresh</div>
-                      {auth.isLoggedIn === true ? <div onClick={handleReport}>Report</div> : <></>}
+                      {wallet.address ? <div onClick={handleReport}>Report</div> : <></>}
                     </MenuList>
                   )}
                 </MoreDetailWrapper>
@@ -396,7 +396,7 @@ export const Details = (props) => {
                       saleInfo?.seller.toLowerCase() !== wallet.address.toLowerCase() ?
                         <>
                           {
-                            auth.isLoggedIn && (category === 'bid' && (sellerBalance >= saleInfo?.copy ? (
+                            wallet.address && (category === 'bid' && (sellerBalance >= saleInfo?.copy ? (
                               isEndedSale !== true ?
                                 <GradientButton
                                   label={'Place a bid'}
@@ -408,7 +408,7 @@ export const Details = (props) => {
                                 /> : <div className='warning'>sale ended</div>
                             ) : <></>))
                           }
-                          {auth.isLoggedIn && (category === 'buy' && (sellerBalance >= saleInfo?.copy ? (
+                          {wallet.address && (category === 'buy' && (sellerBalance >= saleInfo?.copy ? (
                             isEndedSale !== true ?
                               <GradientButton
                                 label={'Buy now'}
@@ -419,7 +419,7 @@ export const Details = (props) => {
                                 handleClick={() => setShowCheckout(true)}
                               /> : <div className='warning'>sale ended</div>
                           ) : <></>))}
-                          {auth?.isLoggedIn !== true && (
+                          {!wallet.address && (
                             <div className='warning'>Please sign-in</div>
                           )}
                         </> :
@@ -440,7 +440,7 @@ export const Details = (props) => {
                     }
                   </div>
                   {
-                    auth?.isLoggedIn === true &&
+                    wallet.address &&
                     <OutlineBox>
                       {
                         category === 'buy' ? `${saleInfo?.copy}/${sellerBalance}` :

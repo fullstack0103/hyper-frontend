@@ -42,9 +42,11 @@ import PopUpNotificationItem from "../Shared/PopUpNotificationItem";
 import PopUpUserProfileItem from "../Shared/PopUpUserProfileItem";
 import { useCustomWallet } from "../../contexts/WalletContext";
 import { useGlobal } from "../../contexts/GlobalContext";
+import STATUS from "../../global/const";
+import useToast from '../../hooks/useToast'
 
 export const Header = (props) => {
-
+  const { showLoading, hideLoading, toastInfo, toastError, toastSuccess } = useToast();
   const { invokeServer } = useGlobal();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showConnectWallet, setShowConnectWallet] = useState(false);
@@ -54,7 +56,7 @@ export const Header = (props) => {
   const theme = useTheme();
   const location = useLocation()
 
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const { wallet, getWalletAddressBySessionKey } = useCustomWallet()
 
   const [isMenu, setIsMenu] = useState(false);
@@ -77,18 +79,14 @@ export const Header = (props) => {
     { id: 0, name: 'Explorer', action: () => { navigate('/explorer') } },
     { id: 1, name: 'Creators', action: () => { navigate('/creators') } },
     { id: 2, name: 'Collections', action: () => { navigate('/collections') } },
-    { id: 3, name: 'Unlisted NFTs', action: () => { navigate('/offer') } },
+    // { id: 3, name: 'Unlisted NFTs', action: () => { navigate('/offer') } },
   ];
 
   const [menuTitle, setMenuTitle] = useState(location?.pathname === '/explorer' ? menuInfo[0].name : location?.pathname === '/creators' ? menuInfo[1].name : location?.pathname === '/offer' ? menuInfo[2].name : location?.pathname === '/collections' ? menuInfo[2].name : 'Explorer');
 
   const handleConnectWallet = () => {
     setIsMenu(false);
-    if (auth.isLoggedIn) {
-      setShowConnectWallet(true);
-    } else {
-      setShowSignIn(true);
-    }
+    setShowConnectWallet(true);
   }
 
   const handleCreateConfirm = () => {
@@ -144,6 +142,31 @@ export const Header = (props) => {
 
     return () => ac.abort();
   }, [])
+
+  useEffect(async () => {
+    if (wallet.address) {
+      let res = await invokeServer('get', `/api/user/profile?address=${wallet.address}`)
+
+      if (res.data.status === STATUS.OK) {
+        setAuth(t => {
+          return {
+            ...t,
+            loggedUserName: res.data.data.name,
+            loggedEmailName: res.data.data.email,
+            avatarURI: res.data.data.avatarURI,
+            coverURI: res.data.data.coverImageURI,
+            loggedUserRole: res.data.data.role,
+          }
+        })
+      } else if (res.data.status === STATUS.NO_CONTENT) {
+        toastInfo('Information', res.data.msg);
+
+        navigate('/settings');
+      } else {
+        toastError('Network Error', res.data.msg);
+      }    
+    }
+  }, [wallet.address])
 
   return (
     <>
@@ -214,7 +237,7 @@ export const Header = (props) => {
             </div>
             <div className="nav-profile">
               <div className="nav-logged-user-container">
-                {auth.isLoggedIn && (
+                {wallet.address && (
                   <>
                     <div className="nav-logged-user-section">
                       <PopUpIconMenu
@@ -238,10 +261,14 @@ export const Header = (props) => {
                     </div>
                   </>
                 )}
-                <div className="wallet-icon">
-                  <BiWallet onClick={handleConnectWallet} />
-                  {window.web3 && <div className='web3-status'></div>}
-                </div>
+                {!wallet.address && (
+                  <>
+                    <div className="wallet-icon">
+                      <BiWallet onClick={handleConnectWallet} />
+                      {window.web3 && <div className='web3-status'></div>}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </>
@@ -256,7 +283,7 @@ export const Header = (props) => {
               />
               <div className="mobile-user-section">
                 <div className="nav-logged-user-container">
-                  {auth.isLoggedIn && (
+                  {wallet.address && (
                     <>
                       <div className="nav-logged-user-section">
                         <div className="color-section">

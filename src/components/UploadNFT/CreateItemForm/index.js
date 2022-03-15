@@ -8,6 +8,7 @@ import MainModal from '../../Shared/MainModal'
 import MdClose from '@meronex/icons/ios/MdClose'
 import { AddTagIcon } from '../../Shared/SvgIcons'
 import { AddPropertyForm } from './AddPropertyForm'
+import STATUS from '../../../global/const'
 
 import {
   CreateItemFormContainer,
@@ -247,11 +248,9 @@ export const CreateItemForm = (props) => {
       invokeServer('get', `/api/collection?owner=${wallet.address}&extra=onlyOwner`)
         .then(res => {
           if (ac.signal.aborted === false) {
-            if (res.data.result == 0) {
-              toastInfo('Warning', res.data.msg);
-            } else if (res.data.result == 1) {
 
-              let colOpts = res.data.collections.map(t => {
+            if (res.data.status === STATUS.OK) {
+              let colOpts = res.data.data.map(t => {
                 return { value: t.contractAddress, content: <Option>{t.name == '' ? t.contractAddress : `${t.name} - ${t.contractAddress}`}</Option> }
               });
 
@@ -264,6 +263,8 @@ export const CreateItemForm = (props) => {
                 }, 2000)
               }
               setCollectionOptions(co => colOpts);
+            } else {
+              toastInfo('Warning', res.data.msg);
             }
           }
         })
