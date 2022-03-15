@@ -29,10 +29,13 @@ import {
 import { useGlobal } from '../../contexts/GlobalContext'
 import useToast from '../../hooks/useToast'
 import { useContract } from '../../contexts/ContractContext'
-import { useAuth, UserRole } from '../../contexts/AuthContext'
+import { CreatorStatus, useAuth, UserRole } from '../../contexts/AuthContext'
 import { useCustomWallet } from '../../contexts/WalletContext'
+import STATUS from '../../global/const';
+import { useNavigate } from 'react-router-dom'
 
 export const CollectionCreator = () => {
+  const navigate = useNavigate();
 
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
@@ -49,7 +52,7 @@ export const CollectionCreator = () => {
   const [description, setDescription] = useState('')
 
   const { invokeServer, addFileToIPFS, getIPFSUrl } = useGlobal();
-  const { toastError, toastSuccess, showLoading, hideLoading } = useToast();
+  const { toastInfo, toastError, toastSuccess, showLoading, hideLoading } = useToast();
   const { createNewCollection } = useContract()
   const { wallet } = useCustomWallet();
   const [isConfirmModal, setIsConfirmModal] = useState(false)
@@ -65,14 +68,43 @@ export const CollectionCreator = () => {
   }
 
   const onCreateNewCollection = async () => {
+    let res = await invokeServer('get', `/api/user/profile?address=${wallet.address}`)
 
-    if (auth.isLoggedIn !== true) {
-      toastError("Fail", "Please sign in as a creator");
+    if (res.data.status === STATUS.OK) {
+      if (res.data.data.role !== UserRole.Creator) {
+        toastInfo('Warning', 'You are not a creator.');
+        return;
+      }
+
+      if (res.data.data.creatorStatus !== CreatorStatus.ACTIVE) {
+        var toastMsg = ''
+
+        switch (res.data.data.creatorStatus) {
+          case CreatorStatus.PENDING:
+            toastMsg = 'Your creator account is on pending.';
+          break;
+  
+          case CreatorStatus.BANNED:
+            toastMsg = 'Your creator account is banned.';
+          break;
+  
+          case CreatorStatus.INACTIVE:
+            toastMsg = 'Your creator account is inactive.';
+          break;
+  
+        }
+
+        toastInfo('Information', toastMsg);
+        return;
+      }
+
+    } else if (res.data.status === STATUS.NO_CONTENT) {
+      toastInfo('Information', res.data.msg);
+
+      navigate('/settings');
       return;
-    }
-
-    if (auth.loggedUserRole !== UserRole.Creator) {
-      toastError("Fail", "You are not a creator");
+    } else {
+      toastError('Network Error', res.data.msg);
       return;
     }
 
@@ -119,9 +151,7 @@ export const CollectionCreator = () => {
         walletAddress: wallet.address,
       })
         .then(r => {
-          if (r.data.result == 1) {
-            toastSuccess('Success', 'server: ' + r.data.msg);
-          } else {
+          if (r.data.status !== STATUS.OK) {
             toastError('Fail', 'server: ' + r.data.msg);
           }
         }).catch(err => {

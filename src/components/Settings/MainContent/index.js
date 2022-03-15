@@ -29,6 +29,7 @@ import { useCustomWallet } from '../../../contexts/WalletContext';
 import GradientButton from '../../Shared/GradientButton';
 import { Input, TextArea } from '../../Shared/InputBox';
 import { Alert } from '../../Shared/Confirm';
+import STATUS from "../../../global/const";
 
 export const MainContent = (props) => {
 
@@ -37,17 +38,17 @@ export const MainContent = (props) => {
     setActiveSection
   } = props
 
-  const { auth, setAuth, creatorSignupInfo, setCreatorSignupInfo, handleSubmitCreatorInfo, updateSessionProfile } = useAuth();
+  const { auth, setAuth, creatorSignupInfo, setCreatorSignupInfo, handleSubmitCreatorInfo } = useAuth();
   const { wallet } = useCustomWallet();
   const { addFileToIPFS, getIPFSUrl, invokeServer } = useGlobal();
   const { showLoading, hideLoading, toastInfo, toastError, toastSuccess } = useToast();
 
   const [name, setName] = useState('');
+  const [username, setUserName] = useState('');
+  const [twitterLink, setTwitterLink] = useState('');
   const [accountBio, setAccountBio] = useState('');
-  const [userFormState, setUserFormState] = useState({
-    name: auth?.loggedUserName || '',
-    email: auth.loggedEmailName || ''
-  })
+  const [email, setEmail] = useState('');
+
   const [alertState, setAlertState] = useState({ open: false, content: null })
 
   const [coverImage, setCoverImage] = useState(settingCover);
@@ -67,12 +68,16 @@ export const MainContent = (props) => {
   })
 
   const changeCoverImage = (uploaded) => {
+    if (uploaded === undefined) return;
+
     let objectUrl = URL.createObjectURL(uploaded);
     setCoverImage(objectUrl);
     setCoverFile(uploaded);
   }
 
   const changeProfileImage = (uploaded) => {
+    if (uploaded === undefined) return;
+
     let objectUrl = URL.createObjectURL(uploaded);
     setProfileImage(objectUrl);
     setProfileFile(uploaded);
@@ -85,155 +90,56 @@ export const MainContent = (props) => {
   ]
 
   const updateProfileInformation = async () => {
-    if (coverFile !== null) {
-      showLoading('Uploading cover image to IPFS...');
+    showLoading('Updating profile information...');
 
-      try {
-        let res = await addFileToIPFS(coverFile)
-        let imageURI = getIPFSUrl(res.path);
+    try {
+      let res;
 
-        showLoading('Updating profile information...');
+      if (coverFile !== null) {
+        res = await addFileToIPFS(coverFile)
+        var coverImageURI = getIPFSUrl(res.path);
+      }
 
-        let r = await invokeServer('post', '/api/signin/profile', {
-          name: auth.loggedUserName,
-          password: auth.loggedPassword,
-          address: wallet.address,
-          cover: imageURI
+      if (profileFile !== null) {
+        console.log('here profileFile');
+        res = await addFileToIPFS(profileFile)
+        var profileImageURI = getIPFSUrl(res.path);
+      }
+
+      res = await invokeServer('post', '/api/user/profile', {
+        address: wallet.address,
+        cover: coverImageURI,
+        avatar: profileImageURI,
+        businessName: name,
+        userName: username,
+        twitterLink: twitterLink,
+        accountBio: accountBio,
+        email: email,
+      })
+
+      hideLoading();
+
+      if (res.data.status === STATUS.OK) {
+        setAuth(t => {
+          return {
+            ...t,
+            loggedUserName: username,
+            loggedEmailName: email,
+            avatarURI: profileImageURI,
+            coverURI: coverImageURI,
+          }
         })
 
-        hideLoading();
-
-        if (r.data.result === 1) {
-          setAuth(t => {
-            return {
-              ...t,
-              coverURI: imageURI
-            }
-          })
-
-          updateSessionProfile({
-            cover: imageURI
-          });
-
-          toastInfo('Cover Image', r.data.msg);
-        } else {
-          toastError('Cover Image', r.data.msg);
-        }
-      } catch (err) {
-        hideLoading();
-
-        console.log(err.message);
-        toastError('Cover Image', err.message);
+        toastInfo('Update Profile', res.data.msg);
+      } else {
+        toastError('Update Profile', res.data.msg);
       }
     }
+    catch (err) {
+      hideLoading();
 
-    if (profileFile !== null) {
-      showLoading('Uploading avatar image to IPFS...');
-
-      try {
-        let res = await addFileToIPFS(profileFile)
-        let imageURI = getIPFSUrl(res.path);
-
-        showLoading('Updating profile information...');
-
-        let r = await invokeServer('post', '/api/signin/profile', {
-          name: auth.loggedUserName,
-          password: auth.loggedPassword,
-          address: wallet.address,
-          avatar: imageURI
-        })
-        hideLoading();
-        if (r.data.result === 1) {
-          setAuth(t => {
-            return {
-              ...t,
-              avatarURI: imageURI
-            }
-          })
-
-          updateSessionProfile({
-            avatar: imageURI
-          })
-          toastInfo('Profile Image', r.data.msg);
-        } else {
-          toastError('Profile Image', r.data.msg);
-        }
-      } catch (err) {
-        hideLoading();
-
-        console.log(err.message);
-        toastError('Profile Image', err.message);
-      }
-    }
-
-    if (name !== '') {
-
-      try {
-        showLoading('Updating profile business name...');
-
-        let r = await invokeServer('post', '/api/signin/profile', {
-          name: auth.loggedUserName,
-          password: auth.loggedPassword,
-          address: wallet.address,
-          businessName: name
-        })
-
-        hideLoading();
-        if (r.data.result === 1) {
-          setAuth(t => {
-            return {
-              ...t,
-              businessName: name
-            }
-          })
-          updateSessionProfile({
-            businessName: name
-          })
-          toastInfo('Profile Business Name', r.data.msg);
-        } else {
-          toastError('Profile Business Name', r.data.msg);
-        }
-      } catch (err) {
-        hideLoading();
-
-        console.log(err.message);
-        toastError('Profile Business Name', err.message);
-      }
-    }
-
-    if (accountBio !== '') {
-
-      try {
-        showLoading('Updating profile bio...');
-
-        let r = await invokeServer('post', '/api/signin/profile', {
-          name: auth.loggedUserName,
-          password: auth.loggedPassword,
-          address: wallet.address,
-          bio: accountBio
-        })
-
-        hideLoading();
-        if (r.data.result === 1) {
-          setAuth(t => {
-            return {
-              ...t,
-              bio: accountBio
-            }
-          })
-          updateSessionProfile({
-            bio: accountBio
-          })
-          toastInfo('Profile Biography', r.data.msg);
-        } else {
-          toastError('Profile Biography', r.data.msg);
-        }
-      } catch (err) {
-        hideLoading();
-
-        console.log(err.message);
-        toastError('Profile Biography', err.message);
-      }
+      console.log(err.message);
+      toastError('Updating Fail!', err.message);
     }
   }
 
@@ -257,9 +163,7 @@ export const MainContent = (props) => {
             notification: notif
           }
         })
-        updateSessionProfile({
-            notification: notif
-        })
+
         toastInfo('Profile Notification', r.data.msg);
       } else {
         toastError('Profile Notification', r.data.msg);
@@ -272,35 +176,17 @@ export const MainContent = (props) => {
     }
   }
 
-  const handleChangeUserFormState = (e) => {
-    setUserFormState({
-      ...userFormState,
-      [e.target.name]: e.target.value
-    })
-  }
-
   const onSubmitCreatorInfo = () => {
-    if (!userFormState.name || !userFormState.email) {
+    if (!creatorSignupInfo.projectName || !creatorSignupInfo.projectDescription || !creatorSignupInfo.category) {
       setAlertState({
         open: true,
-        content: 'Please complete your profile first'
+        content: 'Please, input all items of Project Info, first.'
       })
       return
     }
-    handleSubmitCreatorInfo()
-  }
 
-  useEffect(() => {
-    if (auth.isLoggedIn === true) {
-      auth.avatarURI && auth.avatarURI !== '' && setProfileImage(auth.avatarURI);
-      auth.coverURI && auth.coverURI !== '' && setCoverImage(auth.coverURI);
-      auth.businessName && auth.businessName !== '' && setName(auth.businessName);
-      auth.bio && auth.bio !== '' && setAccountBio(auth.bio);
-    } else {
-      setName('');
-      setAccountBio('');
-    }
-  }, [auth.avatarURI, auth.coverURI, auth.businessName, auth.bio, auth.isLoggedIn])
+    handleSubmitCreatorInfo();
+  }
 
   useEffect(() => {
     let notif = JSON.parse(auth.notification);
@@ -320,24 +206,9 @@ export const MainContent = (props) => {
   }, [auth.notification])
 
   useEffect(() => {
-    setUserFormState({
-      name: auth?.loggedUserName || '',
-      email: auth.loggedEmailName || ''
-    })
-    setCreatorSignupInfo( t => {
-      return {
-        ...t,
-        name: auth.loggedUserName,
-        email: auth.loggedEmailName,
-        password: auth.loggedPassword
-      }
-    });
-  }, [auth.loggedUserName, auth.loggedEmailName, auth.loggedPassword])
-
-
-  useEffect(() => {
     if (activeSection !== SettingPageSections.verification) return
-    if (!userFormState.email) {
+
+    if (!email) {
       setAlertState({
         open: true,
         content: 'Please fill your email first'
@@ -345,6 +216,35 @@ export const MainContent = (props) => {
     }
   }, [activeSection])
 
+  useEffect(async () => {
+    if (wallet.address) {
+      let res = await invokeServer('get', `/api/user/profile?address=${wallet.address}`)
+
+      if (res.data.status === STATUS.OK) {
+        setName(res.data.data.businessName);
+        setUserName(res.data.data.name);
+        setTwitterLink(res.data.data.twitterLink);
+        setAccountBio(res.data.data.bio);
+        setEmail(res.data.data.email);
+        if (res.data.data.avatarURI) {
+          setProfileImage(res.data.data.avatarURI);
+        }
+        if (res.data.data.coverURI) {
+          setCoverImage(res.data.data.coverURI);
+        }
+        
+        setCreatorSignupInfo(t => {
+          return {
+            ...t,
+            projectName: res.data.data.projectName? res.data.data.projectName : '',
+            projectDescription: res.data.data.projectDescription? res.data.data.projectDescription : '',
+            category: res.data.data.category? res.data.data.category : '',
+            tags: res.data.data.tags? res.data.data.tags : '',
+          }
+        })
+      }
+    }
+  }, [wallet.address])
 
   return (
     <>
@@ -382,7 +282,7 @@ export const MainContent = (props) => {
                 <FormGroup>
                   <label>Name *</label>
                   <Input
-                    placeholder='You can enter you full name, business name, or brand name'
+                    placeholder='You can enter your full name, business name, or brand name'
                     name='name'
                     type='text'
                     value={name}
@@ -397,12 +297,12 @@ export const MainContent = (props) => {
                     placeholder='Choose a username for your profile'
                     name='name'
                     type='text'
-                    value={userFormState.name}
-                    onChange={e => handleChangeUserFormState(e)}
+                    value={username}
+                    onChange={e => setUserName(e.target.value)}
                     required
                   />
                 </FormGroup>
-                {auth?.loggedUserRole === 'creator' && (
+                {/* {auth?.loggedUserRole === 'creator' && (
                   <>
                     <FormGroup>
                       <label>Website</label>
@@ -421,13 +321,15 @@ export const MainContent = (props) => {
                       />
                     </FormGroup>
                   </>
-                )}
+                )} */}
                 <FormGroup>
                   <label>Twitter</label>
                   <Input
                     placeholder='Twitter url'
                     name='twitter'
                     type='text'
+                    value={twitterLink}
+                    onChange={e => setTwitterLink(e.target.value)}
                   />
                 </FormGroup>
 
@@ -456,8 +358,8 @@ export const MainContent = (props) => {
                     name='email'
                     placeholder='This is where push notifications and account updates will be sent.'
                     required={true}
-                    value={userFormState?.email}
-                    onChange={(e) => handleChangeUserFormState(e)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </FormGroup>
                 <GradientButton

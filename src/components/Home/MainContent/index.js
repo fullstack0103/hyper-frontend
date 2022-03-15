@@ -1,151 +1,156 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { useNavigate } from "react-router-dom"
-import CardItem from '../../Shared/CardItem'
-import { useWindowSize } from '../../../hooks/useWindowSize'
-import GradientButton from '../../Shared/GradientButton'
-import {
-  MainContentContainer,
-  CardList,
-  FilterWrapper
-} from './styles'
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import CardItem from "../../Shared/CardItem";
+import { useWindowSize } from "../../../hooks/useWindowSize";
+import GradientButton from "../../Shared/GradientButton";
+import { MainContentContainer, CardList, FilterWrapper } from "./styles";
 
-const PIXELS_TO_SCROLL = 100
+const PIXELS_TO_SCROLL = 100;
 
 export const MainContent = (props) => {
-  const {
-    isOpenRightMenu,
-    isMoreView,
-    isLoading,
-    sales,
-    nfts
-  } = props
+  const { isOpenRightMenu, isMoreView, isLoading, sales, nfts } = props;
+
+  console.log('++++ sales', sales);
+  console.log('++++ nfts', nfts);
 
   const windowSize = useWindowSize();
   let navigate = useNavigate();
 
-  const itemsRef = useRef(null)
-  const [loadedSales, setLoadedSales] = useState([])
-  const [isLoadMore, setIsLoadMore] = useState(false)
-  const [selectedFilterItem, setSelectedFilterItem] = useState('all')
+  const itemsRef = useRef(null);
+  const [loadedSales, setLoadedSales] = useState([]);
+  const [isLoadMore, setIsLoadMore] = useState(false);
+  const [selectedFilterItem, setSelectedFilterItem] = useState("all");
 
   const filterList = [
-    { key: 'all', name: 'All' },
-    { key: 'listed', name: 'Listed' },
-    { key: 'unlisted', name: 'Unlisted' },
-  ]
+    { key: "all", name: "All" },
+    { key: "listed", name: "Listed" },
+    { key: "unlisted", name: "Unlisted" },
+  ];
 
   const handleDetails = (sale) => {
     if (sale.method === 2) {
       navigate(`/products/${sale.collectionAddress}/${sale.tokenId}/offer`);
     } else {
-      let tt = loadedSales.filter(t => t.saleId === sale.saleId);
+      let tt = loadedSales.filter((t) => t.saleId === sale.saleId);
       if (tt.length > 0) {
         switch (tt[0].method) {
           case 0:
-            navigate(`/products/${tt[0].collectionAddress}/${tt[0].tokenId}/${sale.saleId}/buy`);
+            navigate(
+              `/products/${tt[0].collectionAddress}/${tt[0].tokenId}/${sale.saleId}/buy`
+            );
             break;
           case 1:
-            navigate(`/products/${tt[0].collectionAddress}/${tt[0].tokenId}/${sale.saleId}/bid`);
+            navigate(
+              `/products/${tt[0].collectionAddress}/${tt[0].tokenId}/${sale.saleId}/bid`
+            );
             break;
-          default: break;
+          default:
+            break;
         }
       }
     }
-  }
+  };
 
-  const handleLoadMoreItems = useCallback((startPos) => {
-    if (startPos < sales.length) {
-      setIsLoadMore(true)
+  const handleLoadMoreItems = useCallback(
+    (startPos) => {
+      if (startPos < sales.length) {
+        setIsLoadMore(true);
 
-      let maxCount = sales.length - startPos;
-      if (maxCount > 15) maxCount = 15;
+        let maxCount = sales.length - startPos;
+        if (maxCount > 15) maxCount = 15;
 
-      setTimeout(() => {
-        setLoadedSales(t => [...t.slice(0, startPos), ...sales.slice(startPos, startPos + maxCount)]);
-        setIsLoadMore(false)
-      }, 1000)
-    }
-  }, [loadedSales, sales])
+        setTimeout(() => {
+          setLoadedSales((t) => [
+            ...t.slice(0, startPos),
+            ...sales.slice(startPos, startPos + maxCount),
+          ]);
+          setIsLoadMore(false);
+        }, 1000);
+      }
+    },
+    [loadedSales, sales]
+  );
 
   const handleScroll = useCallback(() => {
-    if (isLoadMore) return
+    if (isLoadMore) return;
 
-    const innerHeightScrolltop = itemsRef?.current.offsetHeight + itemsRef?.current.scrollTop + PIXELS_TO_SCROLL
+    const innerHeightScrolltop =
+      itemsRef?.current.offsetHeight +
+      itemsRef?.current.scrollTop +
+      PIXELS_TO_SCROLL;
     if (loadedSales.length < sales.length) {
       if (itemsRef?.current.scrollHeight < innerHeightScrolltop) {
-        handleLoadMoreItems(loadedSales.length)
+        handleLoadMoreItems(loadedSales.length);
       }
     }
-  }, [isLoadMore, loadedSales, sales])
+  }, [isLoadMore, loadedSales, sales]);
 
   useEffect(() => {
-    itemsRef?.current?.addEventListener('scroll', handleScroll)
+    itemsRef?.current?.addEventListener("scroll", handleScroll);
     return () => {
-      itemsRef?.current?.removeEventListener('scroll', handleScroll)
-    }
-  }, [isLoadMore, loadedSales, sales])
+      itemsRef?.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [isLoadMore, loadedSales, sales]);
 
   useEffect(() => {
     if (isLoading !== true) {
-      setLoadedSales(t => []);
+      setLoadedSales((t) => []);
       handleLoadMoreItems(0);
     }
-  }, [sales, isLoading])
+  }, [sales, isLoading]);
 
   return (
     <MainContentContainer
       ref={itemsRef}
-      style={(windowSize.width < 800 && isOpenRightMenu) ? { display: 'none' } : { display: 'block' }}
+      style={
+        windowSize.width < 800 && isOpenRightMenu
+          ? { display: "none" }
+          : { display: "block" }
+      }
     >
       {sales.length > 0 ? (
         <>
-        <FilterWrapper>
-          {filterList.map(item => (
-            <GradientButton
-              key={item.key}
-              isNoPadding
-              width='100px'
-              height='40px'
-              label={item.name}
-              isBlackMode={selectedFilterItem !== item.key}
-              isDarkMode={selectedFilterItem !== item.key}
-              handleClick={() => setSelectedFilterItem(item.key)}
-            />
-          ))}
-        </FilterWrapper>
-          <CardList
-            isMoreView={isMoreView}
-          >
+          <FilterWrapper>
+            {filterList.map((item) => (
+              <GradientButton
+                key={item.key}
+                isNoPadding
+                width="100px"
+                height="40px"
+                label={item.name}
+                isBlackMode={selectedFilterItem !== item.key}
+                isDarkMode={selectedFilterItem !== item.key}
+                handleClick={() => setSelectedFilterItem(item.key)}
+              />
+            ))}
+          </FilterWrapper>
+          <CardList isMoreView={isMoreView}>
             {isLoading ? (
-              [...Array(15).keys()].map(i => (
-                <CardItem
-                  key={i}
-                  isSkeleton
-                />
-              ))
+              [...Array(15).keys()].map((i) => <CardItem key={i} isSkeleton />)
             ) : (
               <>
-                {
-                  loadedSales.map((item, index) => {
-                    let tt = nfts.filter(t => t.collectionAddress.toLowerCase() === item.collectionAddress.toLowerCase() && t.tokenId === item.tokenId);
-                    return (tt.length > 0 ?
-                      <CardItem
-                        key={index}
-                        item={tt[0]}
-                        sale={item}
-                        onClick={() => handleDetails(item)}
-                      /> : <></>
-                    )
-                  })
-                }
-                {isLoadMore && (
-                  [...Array(15).keys()].map(i => (
+                {loadedSales.map((item, index) => {
+                  let tt = nfts.filter(
+                    (t) =>
+                      t.collectionAddress.toLowerCase() ===
+                        item.collectionAddress.toLowerCase() &&
+                      t.tokenId === item.tokenId
+                  );
+                  return tt.length > 0 ? (
                     <CardItem
-                      key={i}
-                      isSkeleton
+                      key={index}
+                      item={tt[0]}
+                      sale={item}
+                      onClick={() => handleDetails(item)}
                     />
-                  ))
-                )}
+                  ) : (
+                    <></>
+                  );
+                })}
+                {isLoadMore &&
+                  [...Array(15).keys()].map((i) => (
+                    <CardItem key={i} isSkeleton />
+                  ))}
               </>
             )}
           </CardList>
@@ -154,5 +159,5 @@ export const MainContent = (props) => {
         <div className="no-result">No Result!</div>
       )}
     </MainContentContainer>
-  )
-}
+  );
+};

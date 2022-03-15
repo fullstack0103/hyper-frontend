@@ -11,10 +11,14 @@ import { useCustomWallet } from '../../../contexts/WalletContext';
 const PopUpUserProfileItem = (props) => {
 
   let navigate = useNavigate();
-  const { handleLogOut } = useAuth();
 
   const { auth } = useAuth();
-  const { wallet } = useCustomWallet();
+  const { wallet, disconnectWallet } = useCustomWallet();
+
+  const Disconnect = () => {
+    disconnectWallet();
+    navigate('/explorer');
+  }
 
   return (
     <PopUpUserProfileItemContainer>
@@ -39,7 +43,7 @@ const PopUpUserProfileItem = (props) => {
       {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/my-collections')}>My Collections</LinkItem>}
       {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/upload')}>UPLOAD NFT</LinkItem>}
       <LinkItem onClick={() => navigate('/settings')}>Settings</LinkItem>
-      <LinkItem onClick={handleLogOut}>Log Out</LinkItem>
+      <LinkItem onClick={Disconnect}>Disconnect Wallet</LinkItem>
     </PopUpUserProfileItemContainer>
   )
 }

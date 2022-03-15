@@ -106,7 +106,7 @@ export const CreateNew = (props) => {
                 Upload File
               </div>
               <div className="upload-desc">
-                Accepte file types (JPG, PNG, MOV, MP4, GIF) Max upload size 50MB
+                Accept file types (JPG, PNG, MOV, MP4, GIF) Max upload size 50MB
               </div>
               <FileUploader 
                 label={'+Add File'} 

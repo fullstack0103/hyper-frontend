@@ -15,8 +15,7 @@ const ipfs = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export const GlobalProvider = ({ children }) => {
   const [global, setGlobal] = useState({
-    serverURL: "https://hyperx-nft-marketplace-backend.herokuapp.com",
-    // serverURL: 'http://127.0.0.1:8082',
+    serverURL: process.env.REACT_APP_SERVER_URL,
     sessionKey: "logInIdV1",
   })
 

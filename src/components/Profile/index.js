@@ -6,10 +6,14 @@ import { useWindowSize } from '../../hooks/useWindowSize'
 import { ProfileNavigatorBar } from './ProfileNavigatorBar'
 import { useParams } from 'react-router-dom'
 import { useCustomWallet } from '../../contexts/WalletContext'
+import { useLocation } from 'react-router-dom'
 
 export const ProfilePageSections = {
   grid: 'grid',
+  notifications: 'notifications',
   activity: 'activity',
+  auction: 'auction',
+  listing: 'listing',
   offer: 'offer',
   hideNFT: 'hideNFT',
   favorite: 'favorite'
@@ -17,7 +21,7 @@ export const ProfilePageSections = {
 
 export const Profile = (props) => {
   const { address } = useParams();
-
+  const { state } = useLocation()
   const { width } = useWindowSize()
   const { getWalletAddressBySessionKey } = useCustomWallet();
 
@@ -53,7 +57,11 @@ export const Profile = (props) => {
     } else {
       setAddressConv(t => address);
     }
-  }, [address]);
+  }, [address])
+
+  useEffect(() => {
+    if (state?.index) setActiveSection(state?.index)
+  }, [state?.index])
 
   return (
     <ProfileContainer isOpenRightMenu={isOpenSideMenu}>

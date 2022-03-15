@@ -3,11 +3,18 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useCustomWallet } from '../WalletContext';
 import { useGlobal } from '../GlobalContext';
 import useToast from "../../hooks/useToast";
+import STATUS from '../../global/const';
 
 export const UserRole = {
-  Admin: 'admin',
-  User: 'user',
-  Creator: 'creator'
+  User: 0,
+  Creator: 1
+}
+
+export const CreatorStatus = {
+  PENDING:  0,
+  ACTIVE:   1,
+  BANNED:   2,
+  INACTIVE: 3,
 }
 
 export const AuthContext = createContext()
@@ -17,20 +24,15 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     loggedEmailName: '',
     loggedUserName: '',
-    loggedUserRole: '',
-    loggedPassword: '',
-    isLoggedIn: false,
+    loggedUserRole: UserRole.User,
     avatarURI: '',
     coverURI: '',
     businessName: '',
     bio: '',
-    notification: '{}'
+    notification: '{}',
   })
 
   const [creatorSignupInfo, setCreatorSignupInfo] = useState({
-    name: '',
-    email: '',
-    password: '',
     projectName: '',
     projectDescription: '',
     category: '',
@@ -60,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const handleSignIn = (user, password) => {
-    if (auth.isLoggedIn) {
+    if (wallet.address) {
       return;
     }
 
@@ -172,7 +174,6 @@ export const AuthProvider = ({ children }) => {
       loggedUserName: '',
       loggedUserRole: '',
       loggedPassword: '',
-      isLoggedIn: false,
       avatar: '',
       cover: '',
       notification: '{}'
@@ -190,15 +191,10 @@ export const AuthProvider = ({ children }) => {
   }
 
   const handleSubmitCreatorInfo = () => {
-    let pwd = shajs('sha384').update(creatorSignupInfo.password).digest('hex');
-
     showLoading('Requesting to sign-up as a creator...');
 
-    invokeServer('post', '/api/signup/creator', {
+    invokeServer('post', '/api/user/addCreator', {
       address: wallet.address?.toLowerCase(),
-      name: creatorSignupInfo.name,
-      email: creatorSignupInfo.email,
-      password: pwd,
       projectName: creatorSignupInfo.projectName,
       projectDescription: creatorSignupInfo.projectDescription,
       category: creatorSignupInfo.category,
@@ -207,7 +203,14 @@ export const AuthProvider = ({ children }) => {
       .then(response => {
         hideLoading();
 
-        if (response.data.result == 1) {
+        if (response.data.result == STATUS.OK) {
+          setAuth(t => {
+            return {
+              ...t,
+              loggedUserRole: UserRole.Creator,
+            }
+          })
+
           toastSuccess('Sign-up As a Creator', response.data.msg);
         } else {
           toastError('Sign-up As a Creator', response.data.msg);
@@ -220,18 +223,6 @@ export const AuthProvider = ({ children }) => {
       })
   }
 
-  const updateSessionProfile = (t) => {
-    if (!auth.isLoggedIn) return;
-
-    let tdata = JSON.parse(window.localStorage.getItem(global.sessionKey));
-    window.localStorage.setItem(global.sessionKey, JSON.stringify({ ...tdata, ...t }));
-
-    t.avatar && setAuth(t => { return {...t, avatarURI: t.avatar}});
-    t.cover && setAuth(t => { return {...t, coverURI: t.cover}});
-    t.bio && setAuth(t => { return {...t, bio: t.bio}});
-    t.businessName && setAuth(t => { return {...t, businessName: t.businessName}});
-  }
-
   useEffect(() => {
     var strVal = window.localStorage.getItem(global.sessionKey);
     let wval = getWalletAddressBySessionKey();
@@ -242,7 +233,7 @@ export const AuthProvider = ({ children }) => {
       if (tt.address !== wval) {
         handleLogOut();
       } else {
-        if (!auth.isLoggedIn) {
+        if (!wallet.address) {
           handleLoggedUser({
             loggedEmailName: tt.email,
             loggedUserName: tt.name,
@@ -261,7 +252,7 @@ export const AuthProvider = ({ children }) => {
   })
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, handleSignIn, handleLogOut, handleSignUp, creatorSignupInfo, setCreatorSignupInfo, handleSubmitCreatorInfo, updateSessionProfile }}>
+    <AuthContext.Provider value={{ auth, setAuth, handleSignIn, handleLogOut, handleSignUp, creatorSignupInfo, setCreatorSignupInfo, handleSubmitCreatorInfo }}>
       {children}
     </AuthContext.Provider>
   )

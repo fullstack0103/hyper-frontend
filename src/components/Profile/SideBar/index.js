@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { SideBarContainer, SideBarDiv } from './styles'
 import { SideToggleBar } from './styles';
-import AiOutlineMenu from '@meronex/icons/ai/AiOutlineMenu';
+// import AiOutlineMenu from '@meronex/icons/ai/AiOutlineMenu';
 import { SideBarFilterSection } from '../../Shared/SideBarFilterSection'
 import {
-  EyeHideIcon,
+  BellInActiveIcon,
+  // EyeHideIcon,
   FavoritesIcon,
   FilterSharpIcon,
   FourGridIcon,
   GraphIcon,
+  HammerIcon,
   MakeOfferIcon,
   NineGridIcon,
   PersonSettingSharpIcon,
   ProgressUploadSharpIcon,
+  TicketIcon
 } from '../../Shared/SvgIcons'
 import { SideBarAllSection } from '../../Shared/SideBarAllSection';
 import HyperTooltip from '../../Shared/HyperTooltip';
@@ -104,6 +107,14 @@ export const SideBar = (props) => {
             </HyperTooltip>
           </div>
           <div
+            className={activeSection === ProfilePageSections.notifications ? "chart-sharp active" : "chart-sharp"}
+            onClick={() => handleActiveSection(ProfilePageSections.notifications)}
+          >
+            <HyperTooltip text="Notifications" direction="left">
+              <BellInActiveIcon />
+            </HyperTooltip>
+          </div>
+          <div
             className={activeSection === ProfilePageSections.activity ? "chart-sharp active" : "chart-sharp"}
             onClick={() => handleActiveSection(ProfilePageSections.activity)}
           >
@@ -128,6 +139,22 @@ export const SideBar = (props) => {
                   <EyeHideIcon />
                 </HyperTooltip>
               </div> */}
+              <div
+                className={activeSection === ProfilePageSections.listing ? "favorite-sharp active" : "favorite-sharp"}
+                onClick={() => handleActiveSection(ProfilePageSections.listing)}
+              >
+                <HyperTooltip text="Listing" direction="left">
+                  <TicketIcon />
+                </HyperTooltip>
+              </div>
+              <div
+                className={activeSection === ProfilePageSections.auction ? "favorite-sharp active" : "favorite-sharp"}
+                onClick={() => handleActiveSection(ProfilePageSections.auction)}
+              >
+                <HyperTooltip text="Auctions" direction="left">
+                  <HammerIcon />
+                </HyperTooltip>
+              </div>
               <div
                 className={activeSection === ProfilePageSections.favorite ? "favorite-sharp active" : "favorite-sharp"}
                 onClick={() => handleActiveSection(ProfilePageSections.favorite)}

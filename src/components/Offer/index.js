@@ -276,7 +276,7 @@ export const Offer = (props) => {
                     <MenuList>
                       <div onClick={handleShare}>Share</div>
                       <div onClick={handleRefresh}>Refresh</div>
-                      { auth.isLoggedIn === true? <div onClick={handleReport}>Report</div> : <></>}
+                      { wallet.address? <div onClick={handleReport}>Report</div> : <></>}
                     </MenuList>
                   )}
                 </MoreDetailWrapper>
@@ -291,7 +291,7 @@ export const Offer = (props) => {
               <div className="action-container">
                 <div className="button-container">
                   <div className="button-group">
-                    {auth.isLoggedIn &&
+                    {wallet.address &&
                       <>
                         <GradientButton
                           label={'Make Offer'}
@@ -303,12 +303,12 @@ export const Offer = (props) => {
                         />
                       </>
                     }
-                    {auth?.isLoggedIn !== true && (
+                    {!wallet.address && (
                       <div className='warning'>Please sign-in</div>
                     )}
                   </div>
                   {
-                    auth?.isLoggedIn === true &&
+                    wallet.address &&
                     <OutlineBox>
                       {
                         `${offerInfo?.copy}`

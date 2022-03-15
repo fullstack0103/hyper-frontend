@@ -105,7 +105,7 @@ export const NFTProvider = (props) => {
         return () => {
             ac.abort();
         }
-    }, [auth.isLoggedIn, wallet.chain, reloadCounter])
+    }, [wallet.address, wallet.chain, reloadCounter])
 
     const requestReloadNFT = (contract, tokenId) => {
         invokeServer('post', '/api/nft/reload', {

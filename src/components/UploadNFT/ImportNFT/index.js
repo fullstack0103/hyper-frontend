@@ -23,7 +23,7 @@ export const ImoprtNFT = (props) => {
           placeholder='Enter NFT ID'
         />
       </InputWrapper>
-      <p>Accepte file types (JPG, PNG, MOV, MP4, GIF) Max upload size 50MB</p>
+      <p>Accept file types (JPG, PNG, MOV, MP4, GIF) Max upload size 50MB</p>
       <GradientButton
         label='Import File'
         width='106px'

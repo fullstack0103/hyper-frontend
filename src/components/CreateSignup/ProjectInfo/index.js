@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useGlobal } from '../../../contexts/GlobalContext'
+import STATUS from '../../../global/const'
 import GradientButton from '../../Shared/GradientButton'
 import { Input, TextArea } from '../../Shared/InputBox'
 import { Select } from '../../Shared/Select'
@@ -34,12 +35,12 @@ export const ProjectInfo = (props) => {
   useEffect(() => {
     let ac = new AbortController();
 
-    invokeServer('get', '/api/user?category')
+    invokeServer('get', '/api/user/category')
       .then(r => {
         if (ac.signal.aborted === false) {
-          if (r.data.result === 1) {
+          if (r.data.status === STATUS.OK) {
             setCategoryOptions(t => {
-              return r.data.categories.map(item => { return {
+              return r.data.data.map(item => { return {
                 value: item._id, content: <Option>{item.name}</Option>
               }})
             })
@@ -67,7 +68,7 @@ export const ProjectInfo = (props) => {
         <label>*Project Name</label>
         <Input
           name='project_name'
-          placeholder='You can enter you full name, business name, or brand name'
+          placeholder='Please, input a project name.'
           value={creatorInfo.projectName}
           onChange={e => {
             let tt = e.target.value;

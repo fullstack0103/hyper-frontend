@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
 import NotificationItem from '../NotificationItem';
 import { NotificationEmptyIcon } from '../SvgIcons';
 import { 
@@ -6,10 +7,11 @@ import {
 } from './styles';
 
 const PopUpNotificationItem = (props) => {
-
   const {
     notificationList
   } = props
+
+  const navitate = useNavigate()
 
   return (
     <PopUpNotificationItemContainer>
@@ -28,6 +30,7 @@ const PopUpNotificationItem = (props) => {
       {notificationList.map(item => (
         <NotificationItem key={item._id} notification={item} />
       ))}
+      <p onClick={() => navitate('/profile/me', { state: {index: 'notifications'} })}>View all notifications </p>
     </PopUpNotificationItemContainer>
   )
 }

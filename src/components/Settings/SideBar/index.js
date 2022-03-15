@@ -25,10 +25,7 @@ export const SideBar = (props) => {
   } = props
 
   const navigate = useNavigate();
-
   const { auth } = useAuth();
-
-  console.log(auth)
 
   return (
     <SideBarContainer>
@@ -51,25 +48,20 @@ export const SideBar = (props) => {
               <UserCircleFillSharpIcon />
             </HyperTooltip>
             {isOpenSideMenu && (
-              <SideBarLabel>
-                {auth?.loggedUserRole === 'creator' ? 'Creator profile' : 'Profile'}
-              </SideBarLabel>
+              <SideBarLabel> {'Profile'} </SideBarLabel>
             )}
           </div>
-          {
-            auth.loggedUserRole !== UserRole.Creator ?
-            <div
-              className={activeSection === SettingPageSections.verification ? "verification-sharp active" : "verification-sharp"}
-              onClick={() => handleActiveSection(SettingPageSections.verification)}
-            >
-              <HyperTooltip text="Upload NFT">
-                <ProgressUploadIcon />
-              </HyperTooltip>
-              {isOpenSideMenu && (
-                <SideBarLabel>Signup as Creator</SideBarLabel>
-              )}
-            </div> : <></>
-            }
+          <div
+            className={activeSection === SettingPageSections.verification ? "verification-sharp active" : "verification-sharp"}
+            onClick={() => handleActiveSection(SettingPageSections.verification)}
+          >
+            <HyperTooltip text="Upload NFT">
+              <ProgressUploadIcon />
+            </HyperTooltip>
+            {isOpenSideMenu && (
+              <SideBarLabel>Signup as Creator</SideBarLabel>
+            )}
+          </div>
           <div
             className={activeSection === SettingPageSections.notification ? "notifications-sharp active" : "notifications-sharp"}
             onClick={() => handleActiveSection(SettingPageSections.notification)}

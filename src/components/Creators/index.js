@@ -14,6 +14,7 @@ import { useGlobal } from '../../contexts/GlobalContext'
 import { useCustomWallet } from '../../contexts/WalletContext'
 import { useAuth } from '../../contexts/AuthContext'
 import useToast from '../../hooks/useToast'
+import STATUS from '../../global/const'
 
 export const Creators = (props) => {
   const [selectedMenu, setSelectedMenu] = useState('all')
@@ -35,11 +36,11 @@ export const Creators = (props) => {
   useEffect(() => {
     let ac = new AbortController();
 
-    invokeServer('get', '/api/creator?info=all')
+    invokeServer('get', '/api/user/creators?info=all')
       .then(r => {
         if (ac.signal.aborted === false) {
-          if (r.data.result === 1) {
-            setCreatorList(t => r.data.creators);
+          if (r.data.status === STATUS.OK) {
+            setCreatorList(t => r.data.data);
           }
         }
       })
@@ -50,6 +51,7 @@ export const Creators = (props) => {
   useEffect(() => {
     if (selectedMenu === 'all') {
       setFilteredList(t => [...creatorList]);
+
     } else if (selectedMenu === 'popular') {
       let tt = JSON.parse(JSON.stringify(creatorList));
       tt.sort((first, second) => {

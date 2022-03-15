@@ -27,6 +27,14 @@ export const FourSquareIcon = (props) => {
   );
 };
 
+export const TicketIcon = () => {
+  return (
+    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" version="1.1" id="mdi-ticket" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.58,16.8L12,14.5L8.42,16.8L9.5,12.68L6.21,10L10.46,9.74L12,5.8L13.54,9.74L17.79,10L14.5,12.68M20,12C20,10.89 20.9,10 22,10V6C22,4.89 21.1,4 20,4H4A2,2 0 0,0 2,6V10C3.11,10 4,10.9 4,12A2,2 0 0,1 2,14V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V14A2,2 0 0,1 20,12Z"></path>
+    </svg>
+  )
+}
+
 export const EightSquareIcon = (props) => {
   return (
     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -292,6 +300,14 @@ export const NotificationEmptyIcon = () => {
       <path d="M10.5 6.85718H13.3571L10.5 11.1429H13.3571" stroke="#AAFF26" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M16.2148 1.14282H20.5006L16.2148 6.85711H20.5006" stroke="#AAFF26" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M14.0716 23.2856C13.1187 24.7142 11.9287 25.4285 10.5001 25.4285C9.07157 25.4285 7.88157 24.7142 6.92871 23.2856" stroke="#AAFF26" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+export const HammerIcon = () => {
+  return (
+    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M571.31 193.94l-22.63-22.63c-6.25-6.25-16.38-6.25-22.63 0l-11.31 11.31-28.9-28.9c5.63-21.31.36-44.9-16.35-61.61l-45.25-45.25c-62.48-62.48-163.79-62.48-226.28 0l90.51 45.25v18.75c0 16.97 6.74 33.25 18.75 45.25l49.14 49.14c16.71 16.71 40.3 21.98 61.61 16.35l28.9 28.9-11.31 11.31c-6.25 6.25-6.25 16.38 0 22.63l22.63 22.63c6.25 6.25 16.38 6.25 22.63 0l90.51-90.51c6.23-6.24 6.23-16.37-.02-22.62zm-286.72-15.2c-3.7-3.7-6.84-7.79-9.85-11.95L19.64 404.96c-25.57 23.88-26.26 64.19-1.53 88.93s65.05 24.05 88.93-1.53l238.13-255.07c-3.96-2.91-7.9-5.87-11.44-9.41l-49.14-49.14z"></path>
     </svg>
   )
 }

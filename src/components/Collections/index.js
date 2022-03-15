@@ -15,6 +15,7 @@ import { useGlobal } from '../../contexts/GlobalContext'
 import { useCustomWallet } from '../../contexts/WalletContext'
 import { useAuth } from '../../contexts/AuthContext'
 import useToast from '../../hooks/useToast'
+import STATUS from '../../global/const'
 
 export const Collections = (props) => {
   const { filter } = props;
@@ -33,36 +34,29 @@ export const Collections = (props) => {
   ]
 
   useEffect(() => {
-    if (wallet.address === '' || auth.isLoggedIn !== true)
+    if (wallet.address === '')
       return;
 
+    let str_api = ''
     if (filter === 'owner') {
-      invokeServer('get', `/api/collection?owner=${wallet.address}&extra=onlyOwner`)
-        .then(res => {
-          if (res.data.result == 0) {
-            toastInfo('Warning', res.data.msg);
-          } else if (res.data.result == 1) {
-            setLoadCollection(res.data.collections);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          toastError('Fail', err.message);
-        })
+      str_api = `/api/collection?owner=${wallet.address}&extra=onlyOwner`;
     } else if (filter === 'all') {
-      invokeServer('get', `/api/collection?owner=${wallet.address}&extra=all`)
-        .then(res => {
-          if (res.data.result == 0) {
-            toastInfo('Warning', res.data.msg);
-          } else if (res.data.result == 1) {
-            setLoadCollection(res.data.collections);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          toastError('Fail', err.message);
-        })
+      str_api = `/api/collection?owner=${wallet.address}&extra=all`;
     }
+
+    invokeServer('get', str_api)
+    .then(res => {
+      if (res.data.status === STATUS.OK) {
+        setLoadCollection(res.data.data);
+      } else {
+        toastInfo('Warning', res.data.msg);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      toastError('Fail', err.message);
+    })
+
   }, [invokeServer, filter, wallet.address, auth])
 
   const handleSort = (menu) => {

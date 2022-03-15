@@ -133,7 +133,7 @@ const CardItem = (props) => {
             ) : (
               <>
                 {
-                  (sellerInfo?.avatarURI && sellerInfo?.avatarURI !== '')? <img src={sellerInfo?.avatarURI} alt=''/> : <FaUserCircle color="#AAFF26" />
+                  (sellerInfo?.avatarURI && sellerInfo?.avatarURI !== '') ? <img src={sellerInfo?.avatarURI} alt='' /> : <FaUserCircle color="#AAFF26" />
                 }
                 {sale && <div className='sale-copy'>{sale.copy} x</div>}
                 {sale && <div className={sale.method === 0 ? 'sale-type sale-buy' : sale.method === 1 ? 'sale-type sale-bid' : sale.method === 2 ? 'sale-type sale-offer' : ''}>{sale.method === 0 ? 'buy' : sale.method === 1 ? 'bid' : sale.method === 2 ? 'offer' : ''}</div>}
@@ -180,7 +180,7 @@ const CardItem = (props) => {
             {isSkeleton ? (
               <Skeleton width={60} height={14} />
             ) : (
-                <div className='collection-name'>Collection name</div>
+              <div className='collection-name'>Collection name</div>
             )}
             {isSkeleton ? (
               <Skeleton width={60} height={14} />
@@ -196,7 +196,7 @@ const CardItem = (props) => {
                 <Skeleton width={50} height={10} />
               ) : (
                 <span>
-                  {sale.method === 2 ? 'FLOOR' : 'PRICE'}
+                  {sale && sale.method === 2 ? 'FLOOR' : 'PRICE'}
                 </span>
               )}
             </div>
@@ -235,7 +235,7 @@ const CardItem = (props) => {
               <Skeleton width={16} height={16} />
             ) : (
               <>
-                {sale.method === 2 ? (
+                {sale && sale.method === 2 ? (
                   <>
                     <img src={theme.images.binanceUsdIcon} alt='' />
                     <img src={theme.images.binanceTokenIcon} alt='' />

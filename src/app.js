@@ -27,16 +27,6 @@ import ToastListener from './components/Toast'
 
 export const App = () => {
 
-  // const { auth } = useAuth();
-  // const navigate = useNavigate();
-
-  // React.useEffect(() => {
-    // if (auth.isLoggedIn === false) {
-    //   console.log('---------------------');
-    //   navigate('/');
-    // }
-  // }, [auth.isLoggedIn])
-
   return (
     <>
       <Header />

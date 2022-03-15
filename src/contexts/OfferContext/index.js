@@ -98,7 +98,7 @@ export const OfferProvider = (props) => {
         return () => {
             ac.abort();
         }
-    }, [auth.isLoggedIn, wallet.chain, reloadCounter])
+    }, [wallet.address, wallet.chain, reloadCounter])
 
     useEffect(() => {
         let ac = new AbortController();

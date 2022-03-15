@@ -10,7 +10,10 @@ import {
   MoreIcon,
   MakeOfferIcon,
   ProgressUploadSharpIcon,
-  GrayEyeIcon
+  GrayEyeIcon,
+  BellActiveIcon,
+  HammerIcon,
+  TicketIcon
 } from '../../Shared/SvgIcons'
 import { useAuth, UserRole } from '../../../contexts/AuthContext';
 import {
@@ -77,13 +80,20 @@ export const ProfileNavigatorBar = (props) => {
             <span>Items</span>
           </MenuItemWrapper>
           <MenuItemWrapper
+            active={activeSection === ProfilePageSections.notifications}
+            onClick={() => handleActiveSection(ProfilePageSections.notifications)}
+          >
+            <BellActiveIcon />
+            <span>Notifications</span>
+          </MenuItemWrapper>
+          <MenuItemWrapper
             active={activeSection === ProfilePageSections.activity}
             onClick={() => handleActiveSection(ProfilePageSections.activity)}
           >
             <GraphIcon />
             <span>Activity</span>
           </MenuItemWrapper>
-          {auth.isLoggedIn && (
+          {wallet.address && (
             <>
               {/* <MenuItemWrapper
                 active={activeSection === ProfilePageSections.hideNFT}
@@ -106,6 +116,20 @@ export const ProfileNavigatorBar = (props) => {
               {
                 isExpand && (auth.loggedUserRole !== UserRole.User && isOperator === true) ? (
                   <>
+                    <MenuItemWrapper
+                      active={activeSection === ProfilePageSections.listing}
+                      onClick={() => handleActiveSection(ProfilePageSections.listing)}
+                    >
+                      <TicketIcon />
+                      <span>Listing</span>
+                    </MenuItemWrapper>
+                    <MenuItemWrapper
+                      active={activeSection === ProfilePageSections.auction}
+                      onClick={() => handleActiveSection(ProfilePageSections.auction)}
+                    >
+                      <HammerIcon />
+                      <span>Auctions</span>
+                    </MenuItemWrapper>
                     <MenuItemWrapper
                       active={activeSection === ProfilePageSections.offer}
                       onClick={() => handleActiveSection(ProfilePageSections.offer)}

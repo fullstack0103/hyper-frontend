@@ -17,8 +17,12 @@ import {
   FilterContainer
 } from './styles'
 import { SideBarFilterSection } from '../../Shared/SideBarFilterSection';
+import walletConfig from '../../../contexts/WalletContext/config';
+import { useCustomWallet } from "../../../contexts/WalletContext";
 
 export const HomeNavigationBar = (props) => {
+  const { wallet, getWalletAddressBySessionKey } = useCustomWallet()
+
   const { auth } = useAuth();
   const location = useLocation()
   const navigate = useNavigate()
@@ -54,7 +58,7 @@ export const HomeNavigationBar = (props) => {
             <FilterSharpIcon />
             <span>Filters</span>
           </MenuItemWrapper>
-          {auth.isLoggedIn && (
+          {wallet.address && (
             <>
               {auth.loggedUserRole === UserRole.Creator ?
                 <MenuItemWrapper

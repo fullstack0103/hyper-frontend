@@ -138,6 +138,6 @@ export const FilterWrapper = styled.div`
   margin-bottom: 20px;
   > div {
     width: auto;
-    margin-left: 15px;
+    margin: 5px 0px 5px 15px;
   }
 `
