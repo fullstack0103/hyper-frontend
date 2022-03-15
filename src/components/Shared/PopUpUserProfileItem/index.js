@@ -38,7 +38,7 @@ const PopUpUserProfileItem = (props) => {
           <div className="user-name">{wallet.address ? wallet.address.slice(0, 6) + '...' + wallet.address.slice(-4) : '0x0'}</div>
         </div>
       </div>
-      <LinkItem onClick={() => navigate('/profile/me')}>Profile</LinkItem>
+      <LinkItem onClick={() => navigate('/profile/me')}>My NFTs</LinkItem>
       {/* <LinkItem>Favorites</LinkItem> */}
       {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/my-collections')}>My Collections</LinkItem>}
       {auth.loggedUserRole === UserRole.Creator && <LinkItem onClick={() => navigate('/upload')}>UPLOAD NFT</LinkItem>}
