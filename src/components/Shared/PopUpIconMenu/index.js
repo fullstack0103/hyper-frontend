@@ -7,8 +7,8 @@ import {
 const PopUpIconMenu = (props) => {
 
   const {
-    width='150px',
-    right='-90px',
+    width='140px',
+    right='0px',
     icon,
     children
   } = props;
