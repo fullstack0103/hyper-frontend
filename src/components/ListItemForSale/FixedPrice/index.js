@@ -40,6 +40,7 @@ export const FixedPrice = (props) => {
   const [customDays, setCustomDays] = useState(7);
   const [defFeeValue, setDefFeeValue] = useState({});
   const [tokenPayments, setTokenPayments] = useState([]);
+  const [selectedPayment, setSelectedPayment] = useState('BNB')
 
   const { itemLoaded, balance, saleCount } = useNFTItem();
 
@@ -98,6 +99,14 @@ export const FixedPrice = (props) => {
     let nval = parseInt(val);
     if (nval >= 0) {
       setCustomDays(t => nval);
+    }
+  }
+
+  const changeToken = (val) => {
+    const item = tokenPayments.find(item => item.value === val);
+    setSelectedPayment(item.value)
+    if (item !== undefined) {
+      setPaymentIndex(t => item.id);
     }
   }
 
@@ -184,13 +193,8 @@ export const FixedPrice = (props) => {
             notReload
             placeholder='Select token'
             options={tokenPayments}
-            defaultValue='BNB'
-            onChange={val => {
-              let item = tokenPayments.find(item => item.value === val);
-              if (item !== undefined) {
-                setPaymentIndex(t => item.id);
-              }
-            }}
+            defaultValue={selectedPayment}
+            onChange={val => changeToken(val)}
           />
         </div>
         <div className="nft-input-container">
@@ -231,7 +235,7 @@ export const FixedPrice = (props) => {
         <div className='set-custom-date'>
           <Input
             type='number'
-            value={customDays}
+            defaultValue={customDays}
             onChange={e => handleCustomDays(e.target.value)}
           />
         </div>
@@ -241,7 +245,7 @@ export const FixedPrice = (props) => {
         <div className='copy-balance'>
           <Input
             type='number'
-            value={copy}
+            defaultValue={copy}
             onChange={(e) => {
               let val = parseInt(e.target.value);
               if (isNaN(val))
@@ -275,7 +279,7 @@ export const FixedPrice = (props) => {
           <label>Set Max 10% Royalties fees</label>
           <Input
             type='number'
-            value={defFeeValue.royalty}
+            defaultValue={defFeeValue.royalty}
             onChange={(e) => setDefFeeValue(t => {
               let val = parseFloat(e.target.value);
               if (isNaN(val)) {

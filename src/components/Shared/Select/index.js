@@ -49,10 +49,10 @@ export const Select = (props) => {
   }
 
   useEffect(() => {
-    document.addEventListener('mouseup', closeSelect)
+    document.addEventListener('click', closeSelect)
     document.addEventListener('keydown', handleKeyDown)
     return () => {
-      document.removeEventListener('mouseup', closeSelect)
+      document.removeEventListener('click', closeSelect)
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [open])
@@ -91,7 +91,7 @@ export const Select = (props) => {
       <SelectInput
         id='select-input'
         disabled={!notReload}
-        onMouseUp={handleSelectClick}
+        onClick={handleSelectClick}
       >
         {!selectedOption && (
           <Selected>
