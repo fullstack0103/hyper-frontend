@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HeaderSearchBoxContainer, Input } from './styles';
+import { useLocation } from 'react-router-dom'
 import AiOutlineSearch from '@meronex/icons/ai/AiOutlineSearch';
 import { useData } from '../../../contexts/DataContext';
 
@@ -8,6 +9,7 @@ const HeaderSearchBox = (props) => {
     onChange
   } = props
 
+  const location = useLocation()
   const { handleSearchNFTs } = useData();
 
   const [text, setText] = useState("");
@@ -17,6 +19,8 @@ const HeaderSearchBox = (props) => {
     setText(event.target.value)
     handleSearchNFTs(event.target.value)
   };
+
+  const placeholder = location.pathname.includes('/profile') ? 'Search items, collections' : 'Search items, collections, and accounts'
   
   return (
     <HeaderSearchBoxContainer>
@@ -24,7 +28,7 @@ const HeaderSearchBox = (props) => {
         type="text"
         value={text}
         onChange={handleChange}
-        placeholder={isFocus ? "" : "Search items, collections, and accounts"}
+        placeholder={isFocus ? "" : placeholder}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onSubmit={e => {
