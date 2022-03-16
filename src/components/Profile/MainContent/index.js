@@ -14,6 +14,7 @@ import { useCustomWallet } from '../../../contexts/WalletContext'
 import { useGlobal } from '../../../contexts/GlobalContext'
 import { useAuth, UserRole } from '../../../contexts/AuthContext'
 import { Select } from '../../Shared/Select'
+import { useData } from '../../../contexts/DataContext'
 import {
   MainContentContainer,
   CardContainer,
@@ -37,9 +38,12 @@ export const MainContent = (props) => {
   const { wallet } = useCustomWallet()
   const { auth } = useAuth()
   const { invokeServer } = useGlobal()
+  const { searchText } = useData()
 
   const [ownedNFTs, setOwnedNFTs] = useState([])
   const [nftFound, setNFTFound] = useState([])
+  const [sales, setSales] = useState([])
+  const [filteredNFTs, setFilteredNFTs] = useState([])
 
   const [isOperator, setIsOperator] = useState(false)
   const [ownerInfo, setOwnerInfo] = useState({
@@ -177,12 +181,98 @@ export const MainContent = (props) => {
     navigate('/upload');
   }
 
+  
+  useEffect(() => {
+    let ac = new AbortController();
+  
+    switch (selectedFilterOption) {
+      case 'all':
+        setSales(t => []);
+        break;
+      case 'direct_sale':
+        // setIsLoading(true);
+        invokeServer('get', `/api/sale?method=0`)
+          .then(res => {
+            if (ac.signal.aborted === false) {
+              // setIsLoading(t => false);
+              setSales(t => res.data.sales)
+            }
+          })
+          .catch(err => {
+            // setIsLoading(t => false);
+            console.log(err);
+          })
+        break;
+      case 'auction':
+        // setIsLoading(true);
+        invokeServer('get', `/api/sale?method=1`)
+          .then(res => {
+            if (ac.signal.aborted === false) {
+              // setIsLoading(t => false);
+              setSales(t => res.data.sales)
+            }
+          })
+          .catch(err => {
+            // setIsLoading(t => false);
+            console.log(err);
+          })
+        break;
+      case 'unlisted':
+        // setIsLoading(true);
+        invokeServer('get', `/api/sale?unlisted=`)
+          .then(res => {
+            if (ac.signal.aborted === false) {
+              // setIsLoading(t => false);
+              setSales(t => res.data.sales)
+            }
+          })
+          .catch(err => {
+            // setIsLoading(t => false);
+            console.log(err);
+          })
+        break;
+      default:
+        setSales(t => []);
+        break;
+    }
+  }, [selectedFilterOption])
+
+  useEffect(() => {
+    let _res = []
+    if (searchText.length > 0) {
+      _res = nftFound?.filter(nft => {
+        return nft.collectionAddress.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.tokenId.toString() === searchText ||
+          nft.URI.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.totalSupply.toString() === searchText ||
+          nft.creator.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.holderCount.toString() === searchText ||
+          nft.image.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.category0?.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.category1?.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.category2?.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.category3?.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.category4?.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.description.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.attributes.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.tags.toLowerCase().includes(searchText.toLowerCase()) ||
+          nft.favoriteCount.toString() === searchText ||
+          nft.commentCount.toString() === searchText ||
+          nft.priceUSD.toString().includes(searchText);
+      })
+    } else {
+      _res = nftFound;
+    }
+    setFilteredNFTs([..._res])
+  }, [searchText, nftFound])
+
   const renderMainContent = () => {
     switch (activeSection) {
       case ProfilePageSections.grid:
         return (
           <>
-            {nftFound.length > 0 ? (
+            {filteredNFTs.length > 0 ? (
               <>
                 <FilterWrapper>
                   <Select
@@ -190,13 +280,32 @@ export const MainContent = (props) => {
                     placeholder='Select a option'
                     options={tokenOptions}
                     defaultValue={selectedFilterOption}
-                    onChange={val => console.log(val)}
+                    onChange={val => setSelectedFilterOption(val)}
                   />
                 </FilterWrapper>
                 <CardList isMoreView={isMoreView} ref={gridDivRef}>
-                  {nftFound.map((item, index) => (
-                    <CardItem key={index} item={item} onClick={() => handleDetails(item.collectionAddress, item.tokenId)} profileAddress={address} />
-                  ))}
+                  {selectedFilterOption === 'all' ? (
+                      filteredNFTs.map((item, index) => (
+                        <CardItem key={index} item={item} onClick={() => handleDetails(item.collectionAddress, item.tokenId)} profileAddress={address} />
+                      ))
+                  ) : (
+                    sales.map((item, index) => {
+                      let tt = filteredNFTs.filter(
+                        (t) =>
+                          t.collectionAddress.toLowerCase() ===
+                            item.collectionAddress.toLowerCase() &&
+                          t.tokenId === item.tokenId
+                      );
+                      return tt.length > 0 && (
+                        <CardItem
+                          key={index}
+                          item={tt[0]}
+                          sale={item}
+                          onClick={() => handleDetails(item)}
+                        />
+                      )
+                    })
+                  )}
                 </CardList>
               </>
             ) : (<div className="no-result" ref={gridDivRef}>
